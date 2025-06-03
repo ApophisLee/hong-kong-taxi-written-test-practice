@@ -8,8 +8,8 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>Hong Kong Taxi Written Test Practice</title>
-        <meta name="description" content="Practice app for Hong Kong taxi written test" />
+        <title>香港的士筆試練習 - Hong Kong Taxi Written Test Practice</title>
+        <meta name="description" content="香港的士筆試練習應用 - Practice app for Hong Kong taxi written test" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
