@@ -2802,12 +2802,6 @@ const LocationPractice: NextPage = () => {
             </div>
           </div>
 
-          <div style={styles.disclaimer}>
-            <p style={styles.disclaimerText}>
-              📋 題庫內容適用於 2025 年 2 月 3 日及以後的考試，此題庫乃用作參考用途，並無任何法律效力，運輸署駕駛事務組可據實際情況或需要，作出修改，而不另行通知。
-            </p>
-          </div>
-
           <div style={styles.questionCard}>
             <h2 style={styles.questionText}>{currentQ.question}</h2>
             
