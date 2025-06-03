@@ -11,7 +11,7 @@ const practiceOptions: PracticeOption[] = [
     description: "練習香港各區地點、建築物和地標相關題目",
     href: "/location-practice",
     icon: "📍",
-    questions: 10,
+    questions: 318,
     difficulty: "中等"
   },
   {
@@ -19,25 +19,25 @@ const practiceOptions: PracticeOption[] = [
     description: "練習香港道路、隧道和行車路線題目",
     href: "/route-practice",
     icon: "🛣️",
-    questions: 12,
+    questions: 37,
     difficulty: "困難"
   },
-  {
-    title: "交通規則練習",
-    description: "練習交通燈號、道路標誌和駕駛規則",
-    href: "/traffic-practice",
-    icon: "🚦",
-    questions: 8,
-    difficulty: "容易"
-  },
-  {
-    title: "綜合模擬考試",
-    description: "包含所有類型題目的完整模擬考試",
-    href: "/comprehensive-exam",
-    icon: "📝",
-    questions: 15,
-    difficulty: "綜合"
-  }
+  // {
+  //   title: "交通規則練習",
+  //   description: "練習交通燈號、道路標誌和駕駛規則",
+  //   href: "/traffic-practice",
+  //   icon: "🚦",
+  //   questions: 8,
+  //   difficulty: "容易"
+  // },
+  // {
+  //   title: "綜合模擬考試",
+  //   description: "包含所有類型題目的完整模擬考試",
+  //   href: "/comprehensive-exam",
+  //   icon: "📝",
+  //   questions: 15,
+  //   difficulty: "綜合"
+  // }
 ];
 
 export default function Practice() {
