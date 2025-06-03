@@ -88,22 +88,26 @@ export default function Practice() {
                     </div>
                   </div>
                 ) : (
-                  <Link href={option.href} style={{ textDecoration: 'none' }}>
-                    <div style={{...styles.card, ...styles.activeCard}}>
-                      <div style={styles.cardHeader}>
-                        <span style={styles.icon}>{option.icon}</span>
-                      </div>
-                      <h3 style={styles.cardTitle}>{option.title}</h3>
-                      <p style={styles.cardDescription}>{option.description}</p>
-                      <div style={styles.cardMeta}>
-                        <span style={styles.metaItem}>📊 {option.questions} 題</span>
-                        <span style={styles.metaItem}>⭐ {option.difficulty}</span>
-                      </div>
-                      <div style={styles.startButton}>
-                        開始練習 →
-                      </div>
+                  <div style={{...styles.card, ...styles.activeCard}}>
+                    <div style={styles.cardHeader}>
+                      <span style={styles.icon}>{option.icon}</span>
+                      <span style={styles.availableBadge}>可使用</span>
                     </div>
-                  </Link>
+                    <h3 style={styles.cardTitle}>{option.title}</h3>
+                    <p style={styles.cardDescription}>{option.description}</p>
+                    <div style={styles.cardMeta}>
+                      <span style={styles.metaItem}>📊 {option.questions} 題</span>
+                      <span style={styles.metaItem}>⭐ {option.difficulty}</span>
+                    </div>
+                    <div style={{display: 'flex', gap: '1rem'}}>
+                      <Link href={`${option.href}?random=false`} style={{ textDecoration: 'none' }}>
+                        <div style={styles.startButton}>順序練習</div>
+                      </Link>
+                      <Link href={`${option.href}?random=true`} style={{ textDecoration: 'none' }}>
+                        <div style={{...styles.startButton, backgroundColor: '#FF5722'}}>隨機練習</div>
+                      </Link>
+                    </div>
+                  </div>
                 )}
               </div>
             ))}
