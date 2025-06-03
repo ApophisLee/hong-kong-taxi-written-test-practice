@@ -40,21 +40,7 @@ const Home: NextPage = () => {
               </div>
             </Link>
             
-            <Link href="/location-practice" style={{ textDecoration: 'none' }}>
-              <div style={styles.card}>
-                <h2>地點試題 &rarr;</h2>
-                <p>練習香港地點和建築物題目</p>
-              </div>
-            </Link>
-            
-            <Link href="/route-practice" style={{ textDecoration: 'none' }}>
-              <div style={styles.card}>
-                <h2>路線試題 &rarr;</h2>
-                <p>練習香港道路和行車路線題目</p>
-              </div>
-            </Link>
-            
-            <div style={styles.card}>
+            {/* <div style={styles.card}>
               <h2>模擬考試 &rarr;</h2>
               <p>進行完整的模擬考試</p>
             </div>
@@ -62,7 +48,7 @@ const Home: NextPage = () => {
             <div style={styles.card}>
               <h2>學習資源 &rarr;</h2>
               <p>查看相關學習資料</p>
-            </div>
+            </div> */}
           </div>
           
           <div style={styles.sponsorContainer}>
