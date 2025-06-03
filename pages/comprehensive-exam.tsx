@@ -305,75 +305,85 @@ const ComprehensiveExam: NextPage = () => {
     });
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div style={styles.main}>
         <Head>
           <title>綜合模擬考試結果 - 香港的士筆試練習</title>
           <meta name="description" content="香港的士筆試綜合模擬考試結果" />
         </Head>
 
-        <div className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <div className="text-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-800 mb-4">考試完成！</h1>
-                <div className={`text-6xl font-bold ${color} mb-4`}>{grade}</div>
-                <div className="text-2xl text-gray-600 mb-2">{message}</div>
-                <div className="text-lg text-gray-600">
+        <div style={styles.container}>
+          <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+            <div style={styles.card}>
+              <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                <h1 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#003f7f', marginBottom: '1rem' }}>考試完成！</h1>
+                <div style={{ fontSize: '4rem', fontWeight: 'bold', color: grade === 'A' ? '#4CAF50' : grade === 'B' ? '#003f7f' : grade === 'C' ? '#FF9800' : '#d12029', marginBottom: '1rem' }}>{grade}</div>
+                <div style={{ fontSize: '1.5rem', color: '#666', marginBottom: '0.5rem' }}>{message}</div>
+                <div style={{ fontSize: '1.1rem', color: '#666' }}>
                   總分：{score}/{examQuestions.length} ({Math.round((score/examQuestions.length)*100)}%)
                 </div>
-                <div className="text-sm text-gray-500 mt-2">
+                <div style={{ fontSize: '0.9rem', color: '#999', marginTop: '0.5rem' }}>
                   用時：{formatTime(timeElapsed)}
                 </div>
               </div>
 
               {/* 分類統計 */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">分類表現</h3>
-                <div className="grid md:grid-cols-3 gap-4">
+              <div style={{ marginBottom: '2rem' }}>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#003f7f', marginBottom: '1rem' }}>分類表現</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                   {categoryStats.map((stat, index) => (
-                    <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                      <h4 className="font-semibold text-gray-700">{stat.category}</h4>
-                      <div className="text-2xl font-bold text-blue-600">
+                    <div key={index} style={{ backgroundColor: '#f8f9fa', padding: '1rem', borderRadius: '8px', border: '2px solid #d12029' }}>
+                      <h4 style={{ fontWeight: 'bold', color: '#003f7f', marginBottom: '0.5rem' }}>{stat.category}</h4>
+                      <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003f7f' }}>
                         {stat.score}/{stat.total}
                       </div>
-                      <div className="text-sm text-gray-600">{stat.percentage}%</div>
+                      <div style={{ fontSize: '0.9rem', color: '#666' }}>{stat.percentage}%</div>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* 答題詳情 */}
-              <div className="mb-8">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">答題詳情</h3>
-                <div className="space-y-4 max-h-96 overflow-y-auto">
+              <div style={{ marginBottom: '2rem' }}>
+                <h3 style={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#003f7f', marginBottom: '1rem' }}>答題詳情</h3>
+                <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
                   {examQuestions.map((question, index) => {
                     const userAnswer = userAnswers[index];
                     const isCorrect = userAnswer && userAnswer.isCorrect;
                     
                     return (
-                      <div key={question.id} className={`p-4 rounded-lg border-l-4 ${
-                        isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'
-                      }`}>
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="text-sm text-gray-600 mb-1">
+                      <div key={question.id} style={{
+                        padding: '1rem',
+                        borderRadius: '8px',
+                        borderLeft: `4px solid ${isCorrect ? '#4CAF50' : '#d12029'}`,
+                        backgroundColor: isCorrect ? '#e8f5e8' : '#ffeaea',
+                        marginBottom: '1rem'
+                      }}>
+                        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: '0.9rem', color: '#666', marginBottom: '0.25rem' }}>
                               第{index + 1}題 ({question.category})
                             </div>
-                            <div className="font-medium text-gray-800 mb-2">
+                            <div style={{ fontWeight: 'bold', color: '#003f7f', marginBottom: '0.5rem' }}>
                               {question.question}
                             </div>
-                            <div className="text-sm text-gray-600">
+                            <div style={{ fontSize: '0.9rem', color: '#666' }}>
                               您的答案：{question.options[userAnswer?.selected]}
                             </div>
                             {!isCorrect && (
-                              <div className="text-sm text-green-600">
+                              <div style={{ fontSize: '0.9rem', color: '#4CAF50' }}>
                                 正確答案：{question.options[question.correct]}
                               </div>
                             )}
                           </div>
-                          <div className={`ml-4 px-2 py-1 rounded text-sm font-medium ${
-                            isCorrect ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'
-                          }`}>
+                          <div style={{
+                            marginLeft: '1rem',
+                            padding: '0.25rem 0.5rem',
+                            borderRadius: '4px',
+                            fontSize: '0.9rem',
+                            fontWeight: 'bold',
+                            backgroundColor: isCorrect ? '#c8e6c9' : '#ffcdd2',
+                            color: isCorrect ? '#2e7d32' : '#c62828'
+                          }}>
                             {isCorrect ? '✓' : '✗'}
                           </div>
                         </div>
@@ -383,20 +393,31 @@ const ComprehensiveExam: NextPage = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
                 <button
                   onClick={handleRestart}
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+                  style={{
+                    ...styles.button,
+                    minWidth: '200px'
+                  }}
                 >
                   重新考試
                 </button>
                 <Link href="/practice">
-                  <a className="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition-colors text-center">
+                  <a style={{
+                    ...styles.button,
+                    ...styles.secondaryButton,
+                    minWidth: '200px'
+                  }}>
                     返回練習選單
                   </a>
                 </Link>
                 <Link href="/">
-                  <a className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors text-center">
+                  <a style={{
+                    ...styles.button,
+                    ...styles.successButton,
+                    minWidth: '200px'
+                  }}>
                     返回首頁
                   </a>
                 </Link>
@@ -412,102 +433,141 @@ const ComprehensiveExam: NextPage = () => {
   const progress = ((currentQuestion + 1) / examQuestions.length) * 100;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div style={styles.main}>
       <Head>
         <title>綜合模擬考試 - 香港的士筆試練習</title>
         <meta name="description" content="香港的士筆試綜合模擬考試，包含地點、路線和交通規則題目" />
       </Head>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
+      <div style={styles.container}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           {/* 標題和進度 */}
-          <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <h1 className="text-2xl font-bold text-gray-800">綜合模擬考試</h1>
-              <div className="text-sm text-gray-600">
+          <div style={styles.card}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#003f7f' }}>綜合模擬考試</h1>
+              <div style={{ fontSize: '0.9rem', color: '#666' }}>
                 用時：{formatTime(timeElapsed)}
               </div>
             </div>
             
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm text-gray-600">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+              <span style={{ fontSize: '0.9rem', color: '#666' }}>
                 第 {currentQuestion + 1} 題，共 {examQuestions.length} 題
               </span>
-              <span className="text-sm text-gray-600">
+              <span style={{ fontSize: '0.9rem', color: '#666' }}>
                 目前得分：{score}/{currentQuestion + (showResult ? 1 : 0)}
               </span>
             </div>
             
-            <div className="w-full bg-gray-200 rounded-full h-2">
+            <div style={styles.progress}>
               <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
+                style={{
+                  ...styles.progressBar,
+                  width: `${progress}%`
+                }}
               ></div>
             </div>
           </div>
 
           {/* 題目卡片 */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="mb-4">
-              <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mb-2">
+          <div style={styles.card}>
+            <div style={{ marginBottom: '1rem' }}>
+              <span style={{
+                display: 'inline-block',
+                backgroundColor: '#e3f2fd',
+                color: '#003f7f',
+                fontSize: '0.8rem',
+                padding: '0.25rem 0.5rem',
+                borderRadius: '1rem',
+                marginBottom: '0.5rem',
+                border: '1px solid #d12029'
+              }}>
                 {question.category}
               </span>
-              <h2 className="text-xl font-semibold text-gray-800">
+              <h2 style={{ fontSize: '1.3rem', fontWeight: 'bold', color: '#003f7f' }}>
                 {question.question}
               </h2>
             </div>
 
             {!showResult ? (
-              <div className="space-y-3">
+              <div>
                 {question.options.map((option, index) => (
                   <button
                     key={index}
                     onClick={() => handleAnswerSelect(index)}
-                    className={`w-full text-left p-4 rounded-lg border-2 transition-all ${
-                      selectedAnswer === index
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                    }`}
+                    style={{
+                      width: '100%',
+                      textAlign: 'left',
+                      padding: '1rem',
+                      marginBottom: '0.75rem',
+                      borderRadius: '8px',
+                      border: selectedAnswer === index ? '2px solid #003f7f' : '2px solid #e0e0e0',
+                      backgroundColor: selectedAnswer === index ? '#e3f2fd' : '#fff',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (selectedAnswer !== index) {
+                        e.currentTarget.style.borderColor = '#d12029';
+                        e.currentTarget.style.backgroundColor = '#f5f5f5';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (selectedAnswer !== index) {
+                        e.currentTarget.style.borderColor = '#e0e0e0';
+                        e.currentTarget.style.backgroundColor = '#fff';
+                      }
+                    }}
                   >
-                    <span className="font-medium">{option}</span>
+                    <span style={{ fontWeight: '500', color: '#003f7f' }}>{option}</span>
                   </button>
                 ))}
 
-                <div className="pt-4">
+                <div style={{ paddingTop: '1rem' }}>
                   <button
                     onClick={handleSubmitAnswer}
                     disabled={selectedAnswer === null}
-                    className={`w-full py-3 px-6 rounded-lg font-medium transition-colors ${
-                      selectedAnswer !== null
-                        ? 'bg-blue-600 text-white hover:bg-blue-700'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }`}
+                    style={{
+                      ...styles.button,
+                      width: '100%',
+                      opacity: selectedAnswer !== null ? 1 : 0.5,
+                      cursor: selectedAnswer !== null ? 'pointer' : 'not-allowed'
+                    }}
                   >
                     提交答案
                   </button>
                 </div>
               </div>
             ) : (
-              <div className="space-y-4">
-                <div className="space-y-3">
+              <div>
+                <div>
                   {question.options.map((option, index) => {
-                    let bgColor = 'bg-gray-50 border-gray-200';
-                    let textColor = 'text-gray-700';
+                    let bgColor = '#f5f5f5';
+                    let borderColor = '#e0e0e0';
+                    let textColor = '#333';
                     
                     if (index === question.correct) {
-                      bgColor = 'bg-green-100 border-green-500';
-                      textColor = 'text-green-800';
+                      bgColor = '#e8f5e8';
+                      borderColor = '#4CAF50';
+                      textColor = '#2e7d32';
                     } else if (index === selectedAnswer && selectedAnswer !== question.correct) {
-                      bgColor = 'bg-red-100 border-red-500';
-                      textColor = 'text-red-800';
+                      bgColor = '#ffeaea';
+                      borderColor = '#d12029';
+                      textColor = '#c62828';
                     }
 
                     return (
                       <div
                         key={index}
-                        className={`p-4 rounded-lg border-2 ${bgColor}`}
+                        style={{
+                          padding: '1rem',
+                          marginBottom: '0.75rem',
+                          borderRadius: '8px',
+                          border: `2px solid ${borderColor}`,
+                          backgroundColor: bgColor
+                        }}
                       >
-                        <span className={`font-medium ${textColor}`}>
+                        <span style={{ fontWeight: '500', color: textColor }}>
                           {option}
                           {index === question.correct && ' ✓'}
                           {index === selectedAnswer && selectedAnswer !== question.correct && ' ✗'}
@@ -517,20 +577,26 @@ const ComprehensiveExam: NextPage = () => {
                   })}
                 </div>
 
-                <div className={`p-4 rounded-lg ${
-                  selectedAnswer === question.correct 
-                    ? 'bg-green-50 border border-green-200' 
-                    : 'bg-red-50 border border-red-200'
-                }`}>
-                  <h3 className="font-semibold mb-2">
+                <div style={{
+                  padding: '1rem',
+                  borderRadius: '8px',
+                  border: `1px solid ${selectedAnswer === question.correct ? '#4CAF50' : '#d12029'}`,
+                  backgroundColor: selectedAnswer === question.correct ? '#e8f5e8' : '#ffeaea',
+                  marginBottom: '1rem'
+                }}>
+                  <h3 style={{ fontWeight: 'bold', marginBottom: '0.5rem', color: '#003f7f' }}>
                     {selectedAnswer === question.correct ? '答對了！' : '答錯了！'}
                   </h3>
-                  <p className="text-gray-700">{question.explanation}</p>
+                  <p style={{ color: '#333' }}>{question.explanation}</p>
                 </div>
 
                 <button
                   onClick={handleNextQuestion}
-                  className="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-green-700 transition-colors"
+                  style={{
+                    ...styles.button,
+                    ...styles.successButton,
+                    width: '100%'
+                  }}
                 >
                   {currentQuestion < examQuestions.length - 1 ? '下一題' : '查看結果'}
                 </button>
@@ -539,9 +605,9 @@ const ComprehensiveExam: NextPage = () => {
           </div>
 
           {/* 導航 */}
-          <div className="mt-6 text-center">
+          <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
             <Link href="/practice">
-              <a className="text-blue-600 hover:text-blue-800 transition-colors">
+              <a style={{ color: '#003f7f', textDecoration: 'none', fontSize: '1rem' }}>
                 ← 返回練習選單
               </a>
             </Link>
@@ -551,5 +617,67 @@ const ComprehensiveExam: NextPage = () => {
     </div>
   );
 }
+
+const styles = {
+  main: {
+    minHeight: '100vh',
+    padding: '2rem 0',
+    background: 'linear-gradient(135deg, #003f7f 0%, #001a3a 100%)',
+    fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
+  } as const,
+  container: {
+    maxWidth: '1200px',
+    margin: '0 auto',
+    padding: '0 1rem',
+  } as const,
+  card: {
+    background: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: '15px',
+    padding: '2rem',
+    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+    marginBottom: '1.5rem',
+  } as const,
+  title: {
+    textAlign: 'center' as const,
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    color: '#003f7f',
+    marginBottom: '1rem',
+  } as const,
+  progress: {
+    width: '100%',
+    height: '8px',
+    backgroundColor: '#e0e0e0',
+    borderRadius: '4px',
+    overflow: 'hidden' as const,
+  } as const,
+  progressBar: {
+    height: '100%',
+    backgroundColor: '#003f7f',
+    borderRadius: '4px',
+    transition: 'width 0.3s ease',
+  } as const,
+  button: {
+    padding: '0.75rem 1.5rem',
+    fontSize: '1rem',
+    backgroundColor: '#003f7f',
+    color: 'white',
+    border: '2px solid #d12029',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    textDecoration: 'none',
+    transition: 'all 0.3s ease',
+    display: 'inline-block',
+    textAlign: 'center' as const,
+  } as const,
+  secondaryButton: {
+    backgroundColor: '#757575',
+    borderColor: '#757575',
+  } as const,
+  successButton: {
+    backgroundColor: '#4CAF50',
+    borderColor: '#4CAF50',
+  } as const,
+};
 
 export default ComprehensiveExam;

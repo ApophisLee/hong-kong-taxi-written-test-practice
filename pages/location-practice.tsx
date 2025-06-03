@@ -2839,7 +2839,7 @@ const styles = {
   main: {
     minHeight: '100vh',
     padding: '2rem 0',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: 'linear-gradient(135deg, #003f7f 0%, #001a3a 100%)',
     fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
   } as const,
   container: {
@@ -2918,12 +2918,12 @@ const styles = {
   submitButton: {
     padding: '1rem 2rem',
     fontSize: '1.1rem',
-    backgroundColor: '#2196F3',
+    backgroundColor: '#003f7f',
     color: 'white',
-    border: 'none',
+    border: '2px solid #d12029',
     borderRadius: '10px',
     cursor: 'pointer',
-    transition: 'background-color 0.3s ease',
+    transition: 'all 0.3s ease',
   } as const,
   disabledButton: {
     backgroundColor: '#ccc',
