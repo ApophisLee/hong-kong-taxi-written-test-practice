@@ -27,21 +27,21 @@ const Home: NextPage = () => {
           </p>
           
           <div style={styles.grid}>
-            <Link href="/practice" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link href="/practice" style={{ textDecoration: 'none' }}>
               <div style={styles.card}>
                 <h2>開始練習 &rarr;</h2>
                 <p>選擇不同類型的題目進行練習</p>
               </div>
             </Link>
             
-            <Link href="/location-practice" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link href="/location-practice" style={{ textDecoration: 'none' }}>
               <div style={styles.card}>
                 <h2>地點試題 &rarr;</h2>
                 <p>練習香港地點和建築物題目</p>
               </div>
             </Link>
             
-            <Link href="/route-practice" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Link href="/route-practice" style={{ textDecoration: 'none' }}>
               <div style={styles.card}>
                 <h2>路線試題 &rarr;</h2>
                 <p>練習香港道路和行車路線題目</p>
@@ -73,7 +73,7 @@ const styles = {
     flexDirection: 'column' as const,
     justifyContent: 'center',
     alignItems: 'center',
-    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    background: 'linear-gradient(135deg, #003f7f 0%, #001a3a 100%)',
     fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
   },
   container: {
@@ -115,15 +115,16 @@ const styles = {
     margin: '1rem',
     padding: '1.5rem',
     textAlign: 'left' as const,
-    color: 'inherit',
+    color: '#003f7f',
     textDecoration: 'none',
-    border: '1px solid rgba(255, 255, 255, 0.2)',
-    borderRadius: '10px',
-    transition: 'color 0.15s ease, border-color 0.15s ease',
+    border: '2px solid #d12029',
+    borderRadius: '8px',
+    transition: 'all 0.3s ease',
     maxWidth: '300px',
-    background: 'rgba(255, 255, 255, 0.1)',
+    background: 'rgba(255, 255, 255, 0.95)',
     backdropFilter: 'blur(10px)',
     cursor: 'pointer',
+    boxShadow: '0 4px 15px rgba(0, 63, 127, 0.1)',
   },
 };
 
