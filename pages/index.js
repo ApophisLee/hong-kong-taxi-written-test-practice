@@ -1,5 +1,6 @@
 import React from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -24,15 +25,26 @@ export default function Home() {
           </p>
           
           <div style={styles.grid}>
-            <div style={styles.card}>
-              <h2>開始練習 &rarr;</h2>
-              <p>開始你的的士筆試練習</p>
-            </div>
+            <Link href="/practice" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div style={styles.card}>
+                <h2>開始練習 &rarr;</h2>
+                <p>選擇不同類型的題目進行練習</p>
+              </div>
+            </Link>
             
-            <div style={styles.card}>
-              <h2>考試規則 &rarr;</h2>
-              <p>了解考試規則和要求</p>
-            </div>
+            <Link href="/location-practice" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div style={styles.card}>
+                <h2>地點試題 &rarr;</h2>
+                <p>練習香港地點和建築物題目</p>
+              </div>
+            </Link>
+            
+            <Link href="/route-practice" style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div style={styles.card}>
+                <h2>路線試題 &rarr;</h2>
+                <p>練習香港道路和行車路線題目</p>
+              </div>
+            </Link>
             
             <div style={styles.card}>
               <h2>模擬考試 &rarr;</h2>
