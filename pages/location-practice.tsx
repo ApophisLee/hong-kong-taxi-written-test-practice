@@ -447,6 +447,7 @@ const styles = {
     marginBottom: '2rem',
   } as const,
   optionButton: {
+    color: '#333',
     padding: '1rem',
     fontSize: '1.1rem',
     backgroundColor: '#f8f9fa',
