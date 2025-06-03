@@ -53,14 +53,24 @@ const Home: NextPage = () => {
           
           <div style={styles.sponsorContainer}>
             <p style={styles.sponsorText}>如果這個工具對您有幫助，請考慮支持開發者</p>
-            <a 
-              href="https://github.com/sponsors/apophislee" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              style={styles.sponsorButton}
-            >
-              ❤️ GitHub Sponsors
-            </a>
+            <div style={styles.buttonGroup}>
+              <a 
+                href="https://github.com/apophislee/hong-kong-taxi-written-test-practice" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={styles.githubButton}
+              >
+                🔗 GitHub
+              </a>
+              <a 
+                href="https://github.com/sponsors/apophislee" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={styles.sponsorButton}
+              >
+                ❤️ GitHub Sponsors
+              </a>
+            </div>
           </div>
         </div>
       </main>
@@ -158,6 +168,24 @@ const styles = {
     color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: '1rem',
     textAlign: 'center' as const,
+  },
+  buttonGroup: {
+    display: 'flex',
+    gap: '1rem',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  githubButton: {
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    backgroundColor: '#333',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    textDecoration: 'none',
+    display: 'inline-block',
+    transition: 'all 0.3s ease',
   },
   sponsorButton: {
     padding: '0.8rem 1.5rem',
