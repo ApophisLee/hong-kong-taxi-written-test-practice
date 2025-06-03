@@ -497,6 +497,7 @@ const RoutePractice: NextPage = () => {
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [showReview, setShowReview] = useState<boolean>(false);
+  const [showAnswerHint, setShowAnswerHint] = useState<boolean>(false);
 
   const currentQ = routeQuestions[currentQuestion];
   const isLastQuestion = currentQuestion === routeQuestions.length - 1;
@@ -527,6 +528,7 @@ const RoutePractice: NextPage = () => {
       setCurrentQuestion(prev => prev + 1);
       setSelectedAnswer(null);
       setShowResult(false);
+      setShowAnswerHint(false);
     }
   };
 
@@ -542,6 +544,30 @@ const RoutePractice: NextPage = () => {
     return "需要加強";
   };
 
+  const handleSkipQuestion = (): void => {
+    const userAnswer: UserAnswer = {
+      questionId: currentQ.id,
+      selected: -1, // -1 表示跳過
+      correct: currentQ.correct,
+      isCorrect: false
+    };
+
+    setUserAnswers(prev => [...prev, userAnswer]);
+    
+    if (isLastQuestion) {
+      setIsCompleted(true);
+    } else {
+      setCurrentQuestion(prev => prev + 1);
+      setSelectedAnswer(null);
+      setShowResult(false);
+      setShowAnswerHint(false);
+    }
+  };
+
+  const handleShowAnswer = (): void => {
+    setShowAnswerHint(true);
+  };
+
   const resetPractice = (): void => {
     setCurrentQuestion(0);
     setSelectedAnswer(null);
@@ -549,6 +575,7 @@ const RoutePractice: NextPage = () => {
     setUserAnswers([]);
     setIsCompleted(false);
     setShowReview(false);
+    setShowAnswerHint(false);
   };
 
   if (isCompleted && !showReview) {
@@ -633,13 +660,15 @@ const RoutePractice: NextPage = () => {
                       {index + 1}. {question.question}
                     </div>
                     <div style={styles.reviewAnswer}>
-                      你的答案：{question.options[userAnswer.selected]} 
-                      {userAnswer.isCorrect ? 
-                        <span style={{ color: '#4CAF50', marginLeft: '10px' }}>✓ 正確</span> : 
-                        <span style={{ color: '#f44336', marginLeft: '10px' }}>✗ 錯誤</span>
+                      你的答案：{userAnswer.selected === -1 ? '暫時跳過' : question.options[userAnswer.selected]} 
+                      {userAnswer.selected === -1 ? 
+                        <span style={{ color: '#ff9800', marginLeft: '10px' }}>⏭ 跳過</span> :
+                        userAnswer.isCorrect ? 
+                          <span style={{ color: '#4CAF50', marginLeft: '10px' }}>✓ 正確</span> : 
+                          <span style={{ color: '#f44336', marginLeft: '10px' }}>✗ 錯誤</span>
                       }
                     </div>
-                    {!userAnswer.isCorrect && (
+                    {(!userAnswer.isCorrect || userAnswer.selected === -1) && (
                       <div style={styles.reviewAnswer}>
                         正確答案：{question.options[question.correct]}
                       </div>
@@ -717,16 +746,42 @@ const RoutePractice: NextPage = () => {
             </div>
 
             {!showResult ? (
-              <button
-                style={{
-                  ...styles.submitButton,
-                  ...(selectedAnswer === null ? styles.disabledButton : {})
-                }}
-                onClick={handleSubmitAnswer}
-                disabled={selectedAnswer === null}
-              >
-                確認答案
-              </button>
+              <div>
+                {showAnswerHint && (
+                  <div style={styles.hintContainer}>
+                    <div style={styles.hintText}>💡 提示：正確答案是 {currentQ.options[currentQ.correct]}</div>
+                    <div style={styles.explanation}>{currentQ.explanation}</div>
+                  </div>
+                )}
+                
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1rem' }}>
+                  <button
+                    style={styles.skipButton}
+                    onClick={handleSkipQuestion}
+                  >
+                    暫時跳過
+                  </button>
+                  
+                  <button
+                    style={{
+                      ...styles.submitButton,
+                      ...(selectedAnswer === null ? styles.disabledButton : {})
+                    }}
+                    onClick={handleSubmitAnswer}
+                    disabled={selectedAnswer === null}
+                  >
+                    確認答案
+                  </button>
+                  
+                  <button
+                    style={styles.showAnswerButton}
+                    onClick={handleShowAnswer}
+                    disabled={showAnswerHint}
+                  >
+                    顯示答案
+                  </button>
+                </div>
+              </div>
             ) : (
               <div style={styles.resultContainer}>
                 <div 
@@ -874,6 +929,39 @@ const styles = {
     border: 'none',
     borderRadius: '8px',
     cursor: 'pointer',
+  } as const,
+  skipButton: {
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    backgroundColor: '#ff9800',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    marginRight: '1rem',
+  } as const,
+  showAnswerButton: {
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    backgroundColor: '#9c27b0',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    marginLeft: '1rem',
+  } as const,
+  hintContainer: {
+    marginTop: '1rem',
+    padding: '1rem',
+    backgroundColor: '#e8f5e8',
+    borderRadius: '8px',
+    border: '2px solid #4CAF50',
+  } as const,
+  hintText: {
+    color: '#2e7d32',
+    fontSize: '1rem',
+    fontWeight: 'bold',
+    marginBottom: '0.5rem',
   } as const,
   resultCard: {
     background: 'rgba(255, 255, 255, 0.95)',

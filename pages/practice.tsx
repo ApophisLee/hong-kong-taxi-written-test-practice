@@ -11,7 +11,7 @@ const practiceOptions: PracticeOption[] = [
     description: "練習香港各區地點、建築物和地標相關題目",
     href: "/location-practice",
     icon: "📍",
-    questions: 318,
+    questions: 319,
     difficulty: "中等"
   },
   {
