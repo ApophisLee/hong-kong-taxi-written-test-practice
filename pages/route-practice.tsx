@@ -6,6 +6,30 @@ import { CSSProperties } from 'react';
 import { Question, UserAnswer } from '../types';
 import routeQuestions from '../data/route-questions.json';
 
+// 洗陣列
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
+// 洗題目同時洗 options 並調整 correct index
+const prepareQuestions = (questions: Question[]): Question[] => {
+  return shuffleArray(questions).map(q => {
+    const optionPairs = q.options.map((opt, idx) => ({ opt, idx }));
+    const shuffledPairs = shuffleArray(optionPairs);
+    const newOptions = shuffledPairs.map(pair => pair.opt);
+    const newCorrect = shuffledPairs.findIndex(pair => pair.idx === q.correct);
+    return {
+      ...q,
+      options: newOptions,
+      correct: newCorrect
+    };
+  });
+};
 
 const RoutePractice: NextPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
@@ -15,9 +39,14 @@ const RoutePractice: NextPage = () => {
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [showReview, setShowReview] = useState<boolean>(false);
   const [showAnswerHint, setShowAnswerHint] = useState<boolean>(false);
+  const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
 
-  const currentQ = routeQuestions[currentQuestion];
-  const isLastQuestion = currentQuestion === routeQuestions.length - 1;
+  React.useEffect(() => {
+    setShuffledQuestions(prepareQuestions(routeQuestions));
+  }, []);
+
+  const currentQ = shuffledQuestions[currentQuestion];
+  const isLastQuestion = currentQuestion === shuffledQuestions.length - 1;
 
   const handleAnswerSelect = (answerIndex: number): void => {
     setSelectedAnswer(answerIndex);
@@ -25,6 +54,7 @@ const RoutePractice: NextPage = () => {
 
   const handleSubmitAnswer = (): void => {
     if (selectedAnswer === null) return;
+    if (!currentQ) return;
 
     const isCorrect = selectedAnswer === currentQ.correct;
     const userAnswer: UserAnswer = {
@@ -49,19 +79,8 @@ const RoutePractice: NextPage = () => {
     }
   };
 
-  const calculateScore = (): number => {
-    const correctAnswers = userAnswers.filter(answer => answer.isCorrect).length;
-    return Math.round((correctAnswers / routeQuestions.length) * 100);
-  };
-
-  const getScoreGrade = (score: number): string => {
-    if (score >= 80) return "優秀";
-    if (score >= 70) return "良好";
-    if (score >= 60) return "及格";
-    return "需要加強";
-  };
-
   const handleSkipQuestion = (): void => {
+    if (!currentQ) return;
     const userAnswer: UserAnswer = {
       questionId: currentQ.id,
       selected: -1, // -1 表示跳過
@@ -81,6 +100,18 @@ const RoutePractice: NextPage = () => {
     }
   };
 
+  const calculateScore = (): number => {
+    const correctAnswers = userAnswers.filter(answer => answer.isCorrect).length;
+    return shuffledQuestions.length === 0 ? 0 : Math.round((correctAnswers / shuffledQuestions.length) * 100);
+  };
+
+  const getScoreGrade = (score: number): string => {
+    if (score >= 80) return "優秀";
+    if (score >= 70) return "良好";
+    if (score >= 60) return "及格";
+    return "需要加強";
+  };
+
   const handleShowAnswer = (): void => {
     setShowAnswerHint(true);
   };
@@ -93,7 +124,12 @@ const RoutePractice: NextPage = () => {
     setIsCompleted(false);
     setShowReview(false);
     setShowAnswerHint(false);
+    setShuffledQuestions(prepareQuestions(routeQuestions));
   };
+
+  if (shuffledQuestions.length === 0) {
+    return null; // 或 loading 樣式
+  }
 
   if (isCompleted && !showReview) {
     const score = calculateScore();
@@ -169,7 +205,7 @@ const RoutePractice: NextPage = () => {
             <div style={styles.reviewSection}>
               <h1 style={styles.reviewTitle}>🛣️ 答案檢視</h1>
               
-              {routeQuestions.map((question, index) => {
+              {shuffledQuestions.map((question, index) => {
                 const userAnswer = userAnswers[index];
                 return (
                   <div key={question.id} style={styles.reviewItem}>
