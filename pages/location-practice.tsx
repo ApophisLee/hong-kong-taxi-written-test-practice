@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import { NextPage } from 'next';
@@ -34,6 +35,19 @@ const prepareQuestions = (questions: Question[]): Question[] => {
   });
 };
 
+// 僅打亂選項，保留題目順序
+const prepareOptionsOnly = (questions: Question[]): Question[] => {
+  return questions.map(q => {
+    const optionPairs = q.options.map((opt, idx) => ({ opt, idx }));
+    const shuffledPairs = shuffleArray(optionPairs);
+    return {
+      ...q,
+      options: shuffledPairs.map(p => p.opt),
+      correct: shuffledPairs.findIndex(p => p.idx === q.correct)
+    };
+  });
+};
+
 const LocationPractice: NextPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -44,9 +58,24 @@ const LocationPractice: NextPage = () => {
   const [showAnswerHint, setShowAnswerHint] = useState<boolean>(false);
   const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
 
+  const router = useRouter();
+  
+  // 載入題目（根據 type 篩選和 random 參數）
+  const loadQuestions = () => {
+    const { type, random } = router.query;
+    let data = locationQuestionsData;
+    if (typeof type === 'string') {
+      data = data.filter(q => q.type === type);
+    }
+    const useRandom = random === 'true';
+    const prepared = useRandom ? prepareQuestions(data) : prepareOptionsOnly(data);
+    setShuffledQuestions(prepared);
+  };
+
   useEffect(() => {
-    setShuffledQuestions(prepareQuestions(locationQuestionsData));
-  }, []);
+    if (!router.isReady) return;
+    loadQuestions();
+  }, [router.isReady, router.query]);
 
   const currentQ = shuffledQuestions[currentQuestion];
   const isLastQuestion = currentQuestion === shuffledQuestions.length - 1;
@@ -128,7 +157,7 @@ const LocationPractice: NextPage = () => {
     setIsCompleted(false);
     setShowReview(false);
     setShowAnswerHint(false);
-    setShuffledQuestions(prepareQuestions(locationQuestionsData));
+    loadQuestions();
   };
 
   if (shuffledQuestions.length === 0) {
@@ -269,7 +298,7 @@ const LocationPractice: NextPage = () => {
               <button style={styles.backButton}>← 返回練習選擇</button>
             </Link>
             <div style={styles.progress}>
-              第 {currentQuestion + 1} 題，共 {locationQuestions.length} 題
+              第 {currentQuestion + 1} 題，共 {shuffledQuestions.length} 題
             </div>
           </div>
 

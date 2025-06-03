@@ -4,6 +4,12 @@ import Link from 'next/link';
 import { NextPage } from 'next';
 import { CSSProperties } from 'react';
 import { PracticeOption } from '../types';
+import locationQuestions from '../data/location-questions.json';
+
+// Extract unique question types from location data
+const locationTypes: string[] = Array.from(
+  new Set(locationQuestions.map((q) => q.type))
+);
 
 const practiceOptions: PracticeOption[] = [
   {
@@ -86,7 +92,6 @@ export default function Practice() {
                     <div style={{...styles.card, ...styles.activeCard}}>
                       <div style={styles.cardHeader}>
                         <span style={styles.icon}>{option.icon}</span>
-                        <span style={styles.availableBadge}>可使用</span>
                       </div>
                       <h3 style={styles.cardTitle}>{option.title}</h3>
                       <p style={styles.cardDescription}>{option.description}</p>
@@ -102,6 +107,32 @@ export default function Practice() {
                 )}
               </div>
             ))}
+          </div> {/* end of styles.grid */}
+
+          {/* 類型練習選擇區 */}
+          <div style={styles.typeSection}>
+            <h2 style={styles.typeTitle}>依類型練習</h2>
+            <div style={styles.grid}>
+              {locationTypes.map((type, i) => {
+                const count = locationQuestions.filter(q => q.type === type).length;
+                return (
+                  <div key={i} style={styles.cardWrapper}>
+                    <div style={{...styles.card, ...styles.activeCard}}>
+                      <h3 style={styles.cardTitle}>{type}</h3>
+                      <p style={styles.cardDescription}>共 {count} 題</p>
+                      <div style={{display: 'flex', gap: '1rem'}}>
+                        <Link href={`/location-practice?type=${encodeURIComponent(type)}&random=false`} style={{ textDecoration: 'none' }}>
+                          <div style={styles.startButton}>順序練習</div>
+                        </Link>
+                        <Link href={`/location-practice?type=${encodeURIComponent(type)}&random=true`} style={{ textDecoration: 'none' }}>
+                          <div style={{...styles.startButton, backgroundColor: '#FF5722'}}>隨機練習</div>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
 
           <div style={styles.tipsSection}>
@@ -307,6 +338,16 @@ const styles = {
     color: 'rgba(255, 255, 255, 0.9)',
     lineHeight: 1.4,
     margin: 0,
+    textAlign: 'center' as const,
+  },
+  typeSection: {
+    marginBottom: '3rem',
+  },
+  typeTitle: {
+    fontSize: '2rem',
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: '1.5rem',
     textAlign: 'center' as const,
   },
 };

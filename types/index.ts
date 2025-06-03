@@ -6,6 +6,7 @@ export interface Question {
   options: string[];
   correct: number;
   explanation: string;
+  type: string;
 }
 
 // 用戶答案類型
