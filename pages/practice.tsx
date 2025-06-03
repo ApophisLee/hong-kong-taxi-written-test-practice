@@ -12,7 +12,7 @@ const practiceOptions: PracticeOption[] = [
     href: "/location-practice",
     icon: "📍",
     questions: 319,
-    difficulty: "中等"
+    difficulty: "困難"
   },
   {
     title: "路線試題練習",
@@ -20,7 +20,7 @@ const practiceOptions: PracticeOption[] = [
     href: "/route-practice",
     icon: "🛣️",
     questions: 37,
-    difficulty: "困難"
+    difficulty: "中等"
   },
   // {
   //   title: "交通規則練習",
