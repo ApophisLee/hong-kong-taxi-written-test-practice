@@ -8,6 +8,30 @@ import locationQuestions from '../data/location-questions.json';
 
 // 基於香港的士筆試地方題庫的真實地點試題（319個地點）
 
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
+// 洗題目同時洗 options 並調整 correct index
+const prepareQuestions = (questions: Question[]): Question[] => {
+  return shuffleArray(questions).map(q => {
+    const optionPairs = q.options.map((opt, idx) => ({ opt, idx }));
+    const shuffledPairs = shuffleArray(optionPairs);
+    const newOptions = shuffledPairs.map(pair => pair.opt);
+    const newCorrect = shuffledPairs.findIndex(pair => pair.idx === q.correct);
+    return {
+      ...q,
+      options: newOptions,
+      correct: newCorrect
+    };
+  });
+};
+
 const LocationPractice: NextPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -16,9 +40,14 @@ const LocationPractice: NextPage = () => {
   const [isCompleted, setIsCompleted] = useState<boolean>(false);
   const [showReview, setShowReview] = useState<boolean>(false);
   const [showAnswerHint, setShowAnswerHint] = useState<boolean>(false);
+  const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
 
-  const currentQ = locationQuestions[currentQuestion];
-  const isLastQuestion = currentQuestion === locationQuestions.length - 1;
+  useEffect(() => {
+    setShuffledQuestions(prepareQuestions(locationQuestions));
+  }, []);
+
+  const currentQ = shuffledQuestions[currentQuestion];
+  const isLastQuestion = currentQuestion === shuffledQuestions.length - 1;
 
   const handleAnswerSelect = (answerIndex: number): void => {
     setSelectedAnswer(answerIndex);
@@ -26,6 +55,7 @@ const LocationPractice: NextPage = () => {
 
   const handleSubmitAnswer = (): void => {
     if (selectedAnswer === null) return;
+    if (!currentQ) return;
 
     const isCorrect = selectedAnswer === currentQ.correct;
     const userAnswer: UserAnswer = {
@@ -51,6 +81,8 @@ const LocationPractice: NextPage = () => {
   };
 
   const handleSkipQuestion = (): void => {
+    if (!currentQ) return;
+
     const userAnswer: UserAnswer = {
       questionId: currentQ.id,
       selected: -1, // -1 表示跳過
@@ -76,7 +108,7 @@ const LocationPractice: NextPage = () => {
 
   const calculateScore = (): number => {
     const correctAnswers = userAnswers.filter(answer => answer.isCorrect).length;
-    return Math.round((correctAnswers / locationQuestions.length) * 100);
+    return shuffledQuestions.length === 0 ? 0 : Math.round((correctAnswers / shuffledQuestions.length) * 100);
   };
 
   const getScoreGrade = (score: number): string => {
@@ -94,7 +126,12 @@ const LocationPractice: NextPage = () => {
     setIsCompleted(false);
     setShowReview(false);
     setShowAnswerHint(false);
+    setShuffledQuestions(prepareQuestions(locationQuestions));
   };
+
+  if (shuffledQuestions.length === 0) {
+    return null; // 或 loading 樣式
+  }
 
   if (isCompleted && !showReview) {
     const score = calculateScore();
@@ -170,7 +207,7 @@ const LocationPractice: NextPage = () => {
             <div style={styles.reviewSection}>
               <h1 style={styles.reviewTitle}>📋 答案檢視</h1>
               
-              {locationQuestions.map((question, index) => {
+              {shuffledQuestions.map((question, index) => {
                 const userAnswer = userAnswers[index];
                 return (
                   <div key={question.id} style={styles.reviewItem}>
