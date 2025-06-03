@@ -469,6 +469,12 @@ const ComprehensiveExam: NextPage = () => {
             </div>
           </div>
 
+          <div style={styles.disclaimer}>
+            <p style={styles.disclaimerText}>
+              📋 題庫內容適用於 2025 年 2 月 3 日及以後的考試，此題庫乃用作參考用途，並無任何法律效力，運輸署駕駛事務組可據實際情況或需要，作出修改，而不另行通知。
+            </p>
+          </div>
+
           {/* 題目卡片 */}
           <div style={styles.card}>
             <div style={{ marginBottom: '1rem' }}>
@@ -677,6 +683,21 @@ const styles = {
   successButton: {
     backgroundColor: '#4CAF50',
     borderColor: '#4CAF50',
+  } as const,
+  disclaimer: {
+    maxWidth: '800px',
+    margin: '0 auto 1.5rem auto',
+    padding: '1rem',
+    background: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: '8px',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+  } as const,
+  disclaimerText: {
+    fontSize: '0.85rem',
+    color: 'rgba(255, 255, 255, 0.9)',
+    lineHeight: 1.4,
+    margin: 0,
+    textAlign: 'center' as const,
   } as const,
 };
 

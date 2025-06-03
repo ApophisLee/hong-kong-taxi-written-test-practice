@@ -59,6 +59,12 @@ export default function Practice() {
           <h1 style={styles.title}>選擇練習類型</h1>
           <p style={styles.subtitle}>Choose Your Practice Type</p>
 
+          <div style={styles.disclaimer}>
+            <p style={styles.disclaimerText}>
+              📋 題庫內容適用於 2025 年 2 月 3 日及以後的考試，此題庫乃用作參考用途，並無任何法律效力，運輸署駕駛事務組可據實際情況或需要，作出修改，而不另行通知。
+            </p>
+          </div>
+
           <div style={styles.grid}>
             {practiceOptions.map((option, index) => (
               <div key={index} style={styles.cardWrapper}>
@@ -287,5 +293,20 @@ const styles = {
     fontSize: '1rem',
     color: '#555',
     lineHeight: '1.5',
+  },
+  disclaimer: {
+    maxWidth: '800px',
+    margin: '0 auto 2rem auto',
+    padding: '1rem',
+    background: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: '8px',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+  },
+  disclaimerText: {
+    fontSize: '0.9rem',
+    color: 'rgba(255, 255, 255, 0.9)',
+    lineHeight: 1.4,
+    margin: 0,
+    textAlign: 'center' as const,
   },
 };

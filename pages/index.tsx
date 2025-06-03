@@ -26,6 +26,12 @@ const Home: NextPage = () => {
             Welcome to Hong Kong Taxi Written Test Practice App
           </p>
           
+          <div style={styles.disclaimer}>
+            <p style={styles.disclaimerText}>
+              📋 題庫內容適用於 2025 年 2 月 3 日及以後的考試，此題庫乃用作參考用途，並無任何法律效力，運輸署駕駛事務組可據實際情況或需要，作出修改，而不另行通知。
+            </p>
+          </div>
+          
           <div style={styles.grid}>
             <Link href="/practice" style={{ textDecoration: 'none' }}>
               <div style={styles.card}>
@@ -125,6 +131,21 @@ const styles = {
     backdropFilter: 'blur(10px)',
     cursor: 'pointer',
     boxShadow: '0 4px 15px rgba(0, 63, 127, 0.1)',
+  },
+  disclaimer: {
+    maxWidth: '800px',
+    margin: '0 auto 2rem auto',
+    padding: '1rem',
+    background: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: '8px',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+  },
+  disclaimerText: {
+    fontSize: '0.9rem',
+    color: 'rgba(255, 255, 255, 0.9)',
+    lineHeight: 1.4,
+    margin: 0,
+    textAlign: 'center' as const,
   },
 };
 

@@ -310,6 +310,12 @@ const TrafficPractice: NextPage = () => {
             </div>
           </div>
 
+          <div style={styles.disclaimer}>
+            <p style={styles.disclaimerText}>
+              📋 題庫內容適用於 2025 年 2 月 3 日及以後的考試，此題庫乃用作參考用途，並無任何法律效力，運輸署駕駛事務組可據實際情況或需要，作出修改，而不另行通知。
+            </p>
+          </div>
+
           <div style={styles.questionCard}>
             <h2 style={styles.questionText}>{currentQ.question}</h2>
             
@@ -546,6 +552,19 @@ const styles = {
   reviewAnswer: {
     marginBottom: '0.5rem',
     fontWeight: '500',
+  } as const,
+  disclaimer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: '10px',
+    padding: '1rem',
+    marginBottom: '1.5rem',
+    textAlign: 'center' as const,
+  } as const,
+  disclaimerText: {
+    fontSize: '0.85rem',
+    color: 'rgba(255, 255, 255, 0.9)',
+    margin: '0',
+    lineHeight: '1.4',
   } as const,
 };
 
