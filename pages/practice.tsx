@@ -123,7 +123,9 @@ export default function Practice() {
                   <div key={i} style={styles.cardWrapper}>
                     <div style={{...styles.card, ...styles.activeCard}}>
                       <h3 style={styles.cardTitle}>{type}</h3>
-                      <p style={styles.cardDescription}>共 {count} 題</p>
+                      <div style={styles.cardMeta}>
+                        <span style={styles.metaItem}>📊 {count} 題</span>
+                      </div>
                       <div style={{display: 'flex', gap: '1rem'}}>
                         <Link href={`/location-practice?type=${encodeURIComponent(type)}&random=false`} style={{ textDecoration: 'none' }}>
                           <div style={styles.startButton}>順序練習</div>
