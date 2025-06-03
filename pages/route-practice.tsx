@@ -433,6 +433,7 @@ const styles = {
   optionButton: {
     padding: '1rem',
     fontSize: '1.1rem',
+    color: '#333',
     backgroundColor: '#f8f9fa',
     border: '2px solid transparent',
     borderRadius: '10px',
