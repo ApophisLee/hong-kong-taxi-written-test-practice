@@ -6,7 +6,8 @@ export interface Question {
   options: string[];
   correct: number;
   explanation: string;
-  type: string;
+  // 額外分類標籤（可選，用於依類型篩選）
+  type?: string;
 }
 
 // 用戶答案類型

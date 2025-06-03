@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { NextPage } from 'next';
 import { CSSProperties } from 'react';
 import { Question, UserAnswer } from '../types';
 import routeQuestions from '../data/route-questions.json';
+import { useRouter } from 'next/router';
 
 // 洗陣列
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -31,6 +32,15 @@ const prepareQuestions = (questions: Question[]): Question[] => {
   });
 };
 
+// 僅打亂選項，保留題目順序
+const prepareOptionsOnly = (questions: Question[]): Question[] => {
+  return questions.map(q => {
+    const pairs = q.options.map((opt, idx) => ({ opt, idx }));
+    const shuffled = shuffleArray(pairs);
+    return { ...q, options: shuffled.map(p => p.opt), correct: shuffled.findIndex(p => p.idx === q.correct) };
+  });
+};
+
 const RoutePractice: NextPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
@@ -41,9 +51,16 @@ const RoutePractice: NextPage = () => {
   const [showAnswerHint, setShowAnswerHint] = useState<boolean>(false);
   const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
 
-  React.useEffect(() => {
-    setShuffledQuestions(prepareQuestions(routeQuestions));
-  }, []);
+  const router = useRouter();
+  const loadQuestions = () => {
+    const useRandom = router.query.random === 'true';
+    const data = useRandom ? prepareQuestions(routeQuestions) : prepareOptionsOnly(routeQuestions);
+    setShuffledQuestions(data);
+  };
+  useEffect(() => {
+    if (!router.isReady) return;
+    loadQuestions();
+  }, [router.isReady, router.query.random]);
 
   const currentQ = shuffledQuestions[currentQuestion];
   const isLastQuestion = currentQuestion === shuffledQuestions.length - 1;
@@ -124,7 +141,7 @@ const RoutePractice: NextPage = () => {
     setIsCompleted(false);
     setShowReview(false);
     setShowAnswerHint(false);
-    setShuffledQuestions(prepareQuestions(routeQuestions));
+    loadQuestions();
   };
 
   if (shuffledQuestions.length === 0) {
@@ -265,7 +282,7 @@ const RoutePractice: NextPage = () => {
               <button style={styles.backButton}>← 返回練習選擇</button>
             </Link>
             <div style={styles.progress}>
-              第 {currentQuestion + 1} 題，共 {routeQuestions.length} 題
+              第 {currentQuestion + 1} 題，共 {shuffledQuestions.length} 題
             </div>
           </div>
 
