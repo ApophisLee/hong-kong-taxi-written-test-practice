@@ -2,11 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { NextPage } from 'next';
-import { CSSProperties } from 'react';
 import { Question, UserAnswer } from '../types';
 import locationQuestions from '../data/location-questions.json';
-import fs from 'fs';
-import stripJsonComments from 'strip-json-comments';
 
 // 只在瀏覽器端不處理，僅 SSR/Node 端才需要
 let locationQuestionsData: Question[] = (locationQuestions as unknown) as Question[];;
