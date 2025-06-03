@@ -17,7 +17,7 @@ const Home: NextPage = () => {
       <main style={styles.main}>
         <div style={styles.container}>
           <h1 style={styles.title}>
-            Hello World! 🚕
+            🚕
           </h1>
           <p style={styles.description}>
             歡迎來到香港的士筆試練習應用程式
