@@ -64,6 +64,18 @@ const Home: NextPage = () => {
               <p>查看相關學習資料</p>
             </div>
           </div>
+          
+          <div style={styles.sponsorContainer}>
+            <p style={styles.sponsorText}>如果這個工具對您有幫助，請考慮支持開發者</p>
+            <a 
+              href="https://github.com/sponsors/apophislee" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={styles.sponsorButton}
+            >
+              ❤️ GitHub Sponsors
+            </a>
+          </div>
         </div>
       </main>
     </div>
@@ -146,6 +158,32 @@ const styles = {
     lineHeight: 1.4,
     margin: 0,
     textAlign: 'center' as const,
+  },
+  sponsorContainer: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: '3rem',
+    padding: '1rem',
+  },
+  sponsorText: {
+    fontSize: '1rem',
+    color: 'rgba(255, 255, 255, 0.9)',
+    marginBottom: '1rem',
+    textAlign: 'center' as const,
+  },
+  sponsorButton: {
+    padding: '0.8rem 1.5rem',
+    fontSize: '1rem',
+    backgroundColor: '#fd3978',
+    color: 'white',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    textDecoration: 'none',
+    display: 'inline-block',
+    transition: 'all 0.3s ease',
   },
 };
 
