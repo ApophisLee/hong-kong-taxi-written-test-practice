@@ -126,3 +126,5 @@ const styles = {
     cursor: 'pointer',
   },
 };
+
+export default Home;
