@@ -1,13 +1,30 @@
 # 香港的士筆試練習 Hong Kong Taxi Written Test Practice
 
-這是一個使用 Next.js 建立的香港的士筆試練習應用程式，可以部署到 GitHub Pages。
+一個專為香港的士筆試考生設計的在線練習平台，提供全面的題庫和模擬考試功能。使用 Next.js 建立，支援靜態部署到 GitHub Pages。
+
+A comprehensive online practice platform designed for Hong Kong taxi written test candidates, featuring complete question banks and mock exam functionality. Built with Next.js and supports static deployment to GitHub Pages.
+
+## 支持專案 Support the Project
+
+如果這個專案對您有幫助，歡迎支持開發者！  
+If this project helps you, please consider supporting the developer!
+
+### GitHub Sponsors
+[![GitHub Sponsors](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ff69b4?logo=github)](https://github.com/sponsors/apophislee)
+
+您的支持能幫助我繼續維護和改進這個專案，讓更多準備考取香港的士牌照的朋友受益！  
+Your support helps me continue maintaining and improving this project for more people preparing for Hong Kong taxi license exams!
 
 ## 功能特色
 
-- 🚕 Hello World 歡迎頁面
-- 📱 響應式設計，支援手機和桌面
-- 🌐 支援中英文
-- 🚀 自動部署到 GitHub Pages
+- 🚕 **交通規則練習** - 香港道路交通條例相關題目
+- 🗺️ **路線練習** - 香港主要道路、隧道和行車路線
+- 📍 **地方練習** - 香港地理位置和地標認識
+- 📝 **綜合考試** - 模擬真實考試環境
+- 📱 **響應式設計** - 支援手機、平板和桌面設備
+- 🌐 **雙語支援** - 中英文界面
+- 📊 **詳細分析** - 答題結果和錯題解析
+- 🚀 **快速部署** - 自動部署到 GitHub Pages
 
 ## 本地開發
 
