@@ -4,7 +4,22 @@ import Link from 'next/link';
 import { NextPage } from 'next';
 import { CSSProperties } from 'react';
 import { Question, UserAnswer } from '../types';
-import locationQuestions from '../data/location-questions.json';
+import locationQuestions from '../data/location-questions.jsonc';
+import fs from 'fs';
+import stripJsonComments from 'strip-json-comments';
+
+// 只在瀏覽器端不處理，僅 SSR/Node 端才需要
+let locationQuestionsData: Question[] = [];
+if (typeof window === 'undefined') {
+  const jsoncRaw = fs.readFileSync(
+    process.cwd() + '/data/location-questions.jsonc',
+    'utf8'
+  );
+  locationQuestionsData = JSON.parse(stripJsonComments(jsoncRaw));
+} else {
+  // 若在瀏覽器端，仍用 import 的 jsonc（Next.js 會自動處理）
+  locationQuestionsData = (locationQuestions as unknown) as Question[];
+}
 
 // 基於香港的士筆試地方題庫的真實地點試題（319個地點）
 
@@ -43,7 +58,7 @@ const LocationPractice: NextPage = () => {
   const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
 
   useEffect(() => {
-    setShuffledQuestions(prepareQuestions(locationQuestions));
+    setShuffledQuestions(prepareQuestions(locationQuestionsData));
   }, []);
 
   const currentQ = shuffledQuestions[currentQuestion];
@@ -126,7 +141,7 @@ const LocationPractice: NextPage = () => {
     setIsCompleted(false);
     setShowReview(false);
     setShowAnswerHint(false);
-    setShuffledQuestions(prepareQuestions(locationQuestions));
+    setShuffledQuestions(prepareQuestions(locationQuestionsData));
   };
 
   if (shuffledQuestions.length === 0) {
