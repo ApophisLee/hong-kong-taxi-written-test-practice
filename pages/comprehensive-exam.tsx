@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { NextPage } from 'next';
+import { Question, UserAnswer, CategoryStat, ScoreGrade } from '../types';
 
 // 綜合模擬考試 - 結合地點、路線和交通規則題目
-const examQuestions = [
+const examQuestions: Question[] = [
   // 地點題目
   {
     id: 1,
@@ -202,15 +204,15 @@ const examQuestions = [
   }
 ];
 
-export default function ComprehensiveExam() {
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [userAnswers, setUserAnswers] = useState([]);
-  const [showResult, setShowResult] = useState(false);
-  const [score, setScore] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [startTime, setStartTime] = useState(null);
-  const [timeElapsed, setTimeElapsed] = useState(0);
+const ComprehensiveExam: NextPage = () => {
+  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
+  const [showResult, setShowResult] = useState<boolean>(false);
+  const [score, setScore] = useState<number>(0);
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
+  const [startTime, setStartTime] = useState<number | null>(null);
+  const [timeElapsed, setTimeElapsed] = useState<number>(0);
 
   useEffect(() => {
     setStartTime(Date.now());
@@ -226,18 +228,20 @@ export default function ComprehensiveExam() {
     return () => clearInterval(timer);
   }, [startTime, isCompleted]);
 
-  const formatTime = (seconds) => {
+  const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const handleAnswerSelect = (answerIndex) => {
+  const handleAnswerSelect = (answerIndex: number): void => {
     setSelectedAnswer(answerIndex);
   };
 
-  const handleSubmitAnswer = () => {
-    const newAnswer = {
+  const handleSubmitAnswer = (): void => {
+    if (selectedAnswer === null) return;
+    
+    const newAnswer: UserAnswer = {
       questionId: examQuestions[currentQuestion].id,
       selected: selectedAnswer,
       correct: examQuestions[currentQuestion].correct,
@@ -254,7 +258,7 @@ export default function ComprehensiveExam() {
     setShowResult(true);
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = (): void => {
     if (currentQuestion < examQuestions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
       setSelectedAnswer(null);
@@ -264,7 +268,7 @@ export default function ComprehensiveExam() {
     }
   };
 
-  const handleRestart = () => {
+  const handleRestart = (): void => {
     setCurrentQuestion(0);
     setSelectedAnswer(null);
     setUserAnswers([]);
@@ -275,7 +279,7 @@ export default function ComprehensiveExam() {
     setTimeElapsed(0);
   };
 
-  const getScoreGrade = () => {
+  const getScoreGrade = (): ScoreGrade => {
     const percentage = (score / examQuestions.length) * 100;
     if (percentage >= 80) return { grade: 'A', color: 'text-green-600', message: '優秀！' };
     if (percentage >= 70) return { grade: 'B', color: 'text-blue-600', message: '良好！' };
@@ -285,8 +289,8 @@ export default function ComprehensiveExam() {
 
   if (isCompleted) {
     const { grade, color, message } = getScoreGrade();
-    const categories = ['地點', '路線', '交通規則'];
-    const categoryStats = categories.map(cat => {
+    const categories: string[] = ['地點', '路線', '交通規則'];
+    const categoryStats: CategoryStat[] = categories.map(cat => {
       const categoryQuestions = examQuestions.filter(q => q.category === cat);
       const categoryAnswers = userAnswers.filter(a => 
         categoryQuestions.some(q => q.id === a.questionId)
@@ -547,3 +551,5 @@ export default function ComprehensiveExam() {
     </div>
   );
 }
+
+export default ComprehensiveExam;

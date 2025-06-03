@@ -1,8 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { NextPage } from 'next';
+import { CSSProperties } from 'react';
 
-export default function Home() {
+const Home: NextPage = () => {
   return (
     <div>
       <Head>
@@ -68,7 +70,7 @@ const styles = {
     padding: '4rem 0',
     flex: 1,
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column' as const,
     justifyContent: 'center',
     alignItems: 'center',
     background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -83,19 +85,19 @@ const styles = {
     margin: 0,
     lineHeight: 1.15,
     fontSize: '4rem',
-    textAlign: 'center',
+    textAlign: 'center' as const,
     color: 'white',
     marginBottom: '1rem',
   },
   description: {
-    textAlign: 'center',
+    textAlign: 'center' as const,
     lineHeight: 1.5,
     fontSize: '1.5rem',
     color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: '0.5rem',
   },
   subtitle: {
-    textAlign: 'center',
+    textAlign: 'center' as const,
     lineHeight: 1.5,
     fontSize: '1.2rem',
     color: 'rgba(255, 255, 255, 0.8)',
@@ -105,14 +107,14 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    flexWrap: 'wrap',
+    flexWrap: 'wrap' as const,
     maxWidth: '800px',
     margin: '0 auto',
   },
   card: {
     margin: '1rem',
     padding: '1.5rem',
-    textAlign: 'left',
+    textAlign: 'left' as const,
     color: 'inherit',
     textDecoration: 'none',
     border: '1px solid rgba(255, 255, 255, 0.2)',

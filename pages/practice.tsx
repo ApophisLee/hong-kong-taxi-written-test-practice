@@ -1,8 +1,11 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { NextPage } from 'next';
+import { CSSProperties } from 'react';
+import { PracticeOption } from '../types';
 
-const practiceOptions = [
+const practiceOptions: PracticeOption[] = [
   {
     title: "地點試題練習",
     description: "練習香港各區地點、建築物和地標相關題目",
@@ -147,13 +150,13 @@ const styles = {
     fontSize: '1rem',
   },
   title: {
-    textAlign: 'center',
+    textAlign: 'center' as const,
     color: 'white',
     fontSize: '3rem',
     marginBottom: '1rem',
   },
   subtitle: {
-    textAlign: 'center',
+    textAlign: 'center' as const,
     color: 'rgba(255, 255, 255, 0.8)',
     fontSize: '1.2rem',
     marginBottom: '3rem',
@@ -174,7 +177,7 @@ const styles = {
     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
     transition: 'transform 0.3s ease, box-shadow 0.3s ease',
     width: '100%',
-    position: 'relative',
+    position: 'relative' as const,
   },
   activeCard: {
     cursor: 'pointer',
@@ -241,7 +244,7 @@ const styles = {
     color: 'white',
     padding: '0.75rem 1.5rem',
     borderRadius: '8px',
-    textAlign: 'center',
+    textAlign: 'center' as const,
     fontWeight: 'bold',
     marginTop: 'auto',
   },
@@ -256,11 +259,11 @@ const styles = {
     fontWeight: 'bold',
     color: '#333',
     marginBottom: '1.5rem',
-    textAlign: 'center',
+    textAlign: 'center' as const,
   },
   tipsList: {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column' as const,
     gap: '1rem',
   },
   tip: {

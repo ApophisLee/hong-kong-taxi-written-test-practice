@@ -1,0 +1,60 @@
+// 題目類型定義
+export interface Question {
+  id: number;
+  category: string;
+  question: string;
+  options: string[];
+  correct: number;
+  explanation: string;
+}
+
+// 用戶答案類型
+export interface UserAnswer {
+  questionId: number;
+  selected: number;
+  correct: number;
+  isCorrect: boolean;
+}
+
+// 分類統計類型
+export interface CategoryStat {
+  category: string;
+  score: number;
+  total: number;
+  percentage: number;
+}
+
+// 成績等級類型
+export interface ScoreGrade {
+  grade: string;
+  color: string;
+  message: string;
+}
+
+// 練習選項類型
+export interface PracticeOption {
+  title: string;
+  description: string;
+  href: string;
+  icon: string;
+  questions: number;
+  difficulty: string;
+  comingSoon?: boolean;
+}
+
+// 頁面 Props 類型
+export interface PageProps {
+  [key: string]: any;
+}
+
+// 考試狀態類型
+export interface ExamState {
+  currentQuestion: number;
+  selectedAnswer: number | null;
+  userAnswers: UserAnswer[];
+  showResult: boolean;
+  score: number;
+  isCompleted: boolean;
+  startTime: number | null;
+  timeElapsed: number;
+}
