@@ -12,8 +12,8 @@ interface SavedProgress {
   userAnswers: UserAnswer[];
   shuffledQuestions: Question[];
   practiceParams: {
-    type?: string;
-    random?: string;
+    type: string | null;
+    random: string | null;
   };
   timestamp: number;
 }
@@ -147,6 +147,14 @@ const LocationPractice: NextPage = () => {
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
+  // 標準化參數函數 - 統一處理 undefined 值
+  const normalizeParams = useCallback((type: string | undefined, random: string | undefined) => {
+    return {
+      type: type || null,
+      random: random || null
+    };
+  }, []);
+
   // 檢查並載入暫存進度
   const checkSavedProgress = useCallback(() => {
     if (typeof window === 'undefined') return false;
@@ -155,12 +163,13 @@ const LocationPractice: NextPage = () => {
     if (saved) {
       const type = router.query.type as string | undefined;
       const random = router.query.random as string | undefined;
-      const currentParams = { type: type || '', random: random || '' };
+      const currentParams = normalizeParams(type, random);
+      const savedParams = normalizeParams(saved.practiceParams.type, saved.practiceParams.random);
       
       // 檢查練習參數是否相同
       const paramsMatch = 
-        saved.practiceParams.type === currentParams.type &&
-        saved.practiceParams.random === currentParams.random;
+        savedParams.type === currentParams.type &&
+        savedParams.random === currentParams.random;
       
       if (paramsMatch) {
         setHasSavedProgress(true);
@@ -172,7 +181,7 @@ const LocationPractice: NextPage = () => {
       }
     }
     return false;
-  }, [router.query, loadProgress, clearProgress]);
+  }, [router.query, loadProgress, clearProgress, normalizeParams]);
 
   // 恢復暫存進度
   const restoreProgress = () => {
@@ -210,11 +219,14 @@ const LocationPractice: NextPage = () => {
   ) => {
     if (typeof window === 'undefined') return;
     
+    // 使用標準化參數
+    const normalizedParams = normalizeParams(params.type, params.random);
+    
     const progressData: SavedProgress = {
       currentQuestion: currentQ,
       userAnswers: answers,
       shuffledQuestions: questions,
-      practiceParams: params,
+      practiceParams: normalizedParams,
       timestamp: Date.now()
     };
     
