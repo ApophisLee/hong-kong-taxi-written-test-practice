@@ -339,14 +339,8 @@ const LocationPractice: NextPage = () => {
     loadQuestions();
   };
 
-  // 快速結束練習
+  // 提前結束練習
   const handleQuickFinish = (): void => {
-    if (userAnswers.length === 0) {
-      // 如果還沒有任何答案，直接返回
-      router.push('/practice');
-      return;
-    }
-    
     // 將剩餘題目標記為跳過
     const remainingQuestions = shuffledQuestions.slice(currentQuestion);
     const skippedAnswers: UserAnswer[] = remainingQuestions.map(q => ({
@@ -626,9 +620,9 @@ const LocationPractice: NextPage = () => {
             <button 
               style={styles.finishButton}
               onClick={handleQuickFinish}
-              title="快速結束練習並查看結果"
+              title="提前結束練習並查看結果"
             >
-              快速結束
+              提前結束
             </button>
           </div>
 
