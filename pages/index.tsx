@@ -13,6 +13,30 @@ const Home: NextPage = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
         <meta name="google-site-verification" content="A4RLgjTSOeNB3WKxKmA91qx0uFzxNqrV_WGyqSIEutU" />
+        <meta name="keywords" content="的士筆試,的士模擬筆試,的士考試,的士筆試練習,的士車牌,的士考牌,網上預約駕駛考試,的士筆試模擬試題" />
+        <meta name="author" content="apophislee" />
+        <link rel="canonical" href="https://apophislee.github.io/hong-kong-taxi-written-test-practice/" />
+        {/* Open Graph */}
+        <meta property="og:title" content="香港的士筆試練習 - Hong Kong Taxi Written Test Practice" />
+        <meta property="og:description" content="免費香港的士筆試練習工具，支援多類型題庫，模擬考試，助你輕鬆通過筆試。" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://apophislee.github.io/hong-kong-taxi-written-test-practice/" />
+        <meta property="og:site_name" content="香港的士筆試練習" />
+        <meta property="og:locale" content="zh_HK" />
+        {/* JSON-LD 結構化資料 */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          name: '香港的士筆試練習',
+          url: 'https://apophislee.github.io/hong-kong-taxi-written-test-practice/',
+          description: '免費香港的士筆試練習工具，支援多類型題庫，模擬考試，助你輕鬆通過筆試。',
+          inLanguage: 'zh-Hant',
+          author: {
+            '@type': 'Person',
+            name: 'apophislee',
+            url: 'https://github.com/apophislee'
+          }
+        }) }} />
       </Head>
 
       <main style={styles.main}>
