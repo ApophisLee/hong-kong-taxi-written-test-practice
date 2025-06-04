@@ -15,7 +15,7 @@ const practiceOptions: PracticeOption[] = [
   {
     title: "地點試題練習",
     description: "練習香港各區地點、建築物和地標相關題目",
-    href: "/location-practice",
+    href: "/location-practice?category=location",
     icon: "📍",
     questions: 319,
     difficulty: "困難"
@@ -23,7 +23,7 @@ const practiceOptions: PracticeOption[] = [
   {
     title: "路線試題練習",
     description: "練習香港道路、隧道和行車路線題目",
-    href: "/route-practice",
+    href: "/location-practice?category=route",
     icon: "🛣️",
     questions: 37,
     difficulty: "中等"
@@ -100,10 +100,10 @@ export default function Practice() {
                       <span style={styles.metaItem}>⭐ {option.difficulty}</span>
                     </div>
                     <div style={{display: 'flex', gap: '1rem'}}>
-                      <Link href={`${option.href}?random=false`} style={{ textDecoration: 'none' }}>
+                      <Link href={`${option.href}&random=false`} style={{ textDecoration: 'none' }}>
                         <div style={styles.startButton}>順序練習</div>
                       </Link>
-                      <Link href={`${option.href}?random=true`} style={{ textDecoration: 'none' }}>
+                      <Link href={`${option.href}&random=true`} style={{ textDecoration: 'none' }}>
                         <div style={{...styles.startButton, backgroundColor: '#FF5722'}}>隨機練習</div>
                       </Link>
                     </div>
@@ -127,10 +127,10 @@ export default function Practice() {
                         <span style={styles.metaItem}>📊 {count} 題</span>
                       </div>
                       <div style={{display: 'flex', gap: '1rem'}}>
-                        <Link href={`/location-practice?type=${encodeURIComponent(type)}&random=false`} style={{ textDecoration: 'none' }}>
+                        <Link href={`/location-practice?category=location&type=${encodeURIComponent(type)}&random=false`} style={{ textDecoration: 'none' }}>
                           <div style={styles.startButton}>順序練習</div>
                         </Link>
-                        <Link href={`/location-practice?type=${encodeURIComponent(type)}&random=true`} style={{ textDecoration: 'none' }}>
+                        <Link href={`/location-practice?category=location&type=${encodeURIComponent(type)}&random=true`} style={{ textDecoration: 'none' }}>
                           <div style={{...styles.startButton, backgroundColor: '#FF5722'}}>隨機練習</div>
                         </Link>
                       </div>

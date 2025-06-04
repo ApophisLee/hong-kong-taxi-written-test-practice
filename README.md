@@ -95,7 +95,7 @@ npm run build
 │   ├── index.tsx             # 首頁
 │   ├── practice.tsx          # 練習選擇頁面
 │   ├── traffic-practice.tsx  # 交通規則練習
-│   ├── route-practice.tsx    # 路線練習
+│   ├── location-practice.tsx  # 統一練習頁面（地點+路線）
 │   ├── location-practice.tsx # 地方練習
 │   └── comprehensive-exam.tsx # 綜合考試
 ├── types/                    # TypeScript 類型定義

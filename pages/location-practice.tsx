@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { NextPage } from 'next';
 import { Question, UserAnswer } from '../types';
 import locationQuestions from '../data/location-questions.json';
+import routeQuestions from '../data/route-questions.json';
 
 // 進度暫存相關類型
 interface SavedProgress {
@@ -12,6 +13,7 @@ interface SavedProgress {
   userAnswers: UserAnswer[];
   shuffledQuestions: Question[];
   practiceParams: {
+    category: string | null;
     type: string | null;
     random: string | null;
   };
@@ -19,12 +21,19 @@ interface SavedProgress {
 }
 
 // 暫存鍵名常數
-const STORAGE_KEY = 'location-practice-progress';
+const STORAGE_KEY = 'practice-progress';
 
 // 載入題目資料
 const locationQuestionsData: Question[] = Array.isArray(locationQuestions) 
   ? locationQuestions as Question[]
-  : [];;
+  : [];
+
+const routeQuestionsData: Question[] = Array.isArray(routeQuestions) 
+  ? routeQuestions as Question[]
+  : [];
+
+// 合併所有題庫
+const allQuestionsData: Question[] = [...locationQuestionsData, ...routeQuestionsData];
 
 // 基於香港的士筆試地方題庫的真實地點試題（319個地點）
 
@@ -65,7 +74,7 @@ const prepareOptionsOnly = (questions: Question[]): Question[] => {
   });
 };
 
-const LocationPractice: NextPage = () => {
+const PracticeQuestion: NextPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState<boolean>(false);
@@ -80,22 +89,34 @@ const LocationPractice: NextPage = () => {
 
   const router = useRouter();
   
-  // 載入題目（根據 type 篩選和 random 參數）
+  // 載入題目（根據 category、type 和 random 參數）
   const loadQuestions = useCallback(() => {
+    if (!router.isReady) return;
+    
     try {
-      if (!locationQuestionsData || !Array.isArray(locationQuestionsData) || locationQuestionsData.length === 0) {
+      if (!allQuestionsData || !Array.isArray(allQuestionsData) || allQuestionsData.length === 0) {
         console.error('找不到題目資料');
         setIsLoading(false);
         return;
       }
       
       // Get current query parameters
+      const category = router.query.category as string | undefined;
       const type = router.query.type as string | undefined;
       const random = router.query.random as string | undefined;
       
-      let data = [...locationQuestionsData]; // 創建副本避免修改原資料
+      let data = [...allQuestionsData]; // 創建副本避免修改原資料
       
-      if (type && type !== '') {
+      // 根據 category 篩選題目
+      if (category && category !== '') {
+        data = data.filter(q => q.category === category);
+      } else {
+        // 如果沒有指定 category，默認使用 location 類別
+        data = data.filter(q => q.category === 'location');
+      }
+      
+      // 根據 type 篩選題目（僅對 location 類型有效）
+      if (type && type !== '' && category === 'location') {
         data = data.filter(q => q.type === type);
       }
       
@@ -114,7 +135,7 @@ const LocationPractice: NextPage = () => {
       console.error('載入題目失敗:', error);
       setIsLoading(false);
     }
-  }, [router.query]);
+  }, [router.isReady, router.query.category, router.query.type, router.query.random]);
 
   // 從 localStorage 載入進度
   const loadProgress = useCallback((): SavedProgress | null => {
@@ -148,8 +169,9 @@ const LocationPractice: NextPage = () => {
   }, []);
 
   // 標準化參數函數 - 統一處理 undefined 值
-  const normalizeParams = useCallback((type: string | undefined, random: string | undefined) => {
+  const normalizeParams = useCallback((category: string | undefined, type: string | undefined, random: string | undefined) => {
     return {
+      category: category || null,
       type: type || null,
       random: random || null
     };
@@ -161,13 +183,15 @@ const LocationPractice: NextPage = () => {
     
     const saved = loadProgress();
     if (saved) {
+      const category = router.query.category as string | undefined;
       const type = router.query.type as string | undefined;
       const random = router.query.random as string | undefined;
-      const currentParams = normalizeParams(type, random);
-      const savedParams = normalizeParams(saved.practiceParams.type, saved.practiceParams.random);
+      const currentParams = normalizeParams(category, type, random);
+      const savedParams = normalizeParams(saved.practiceParams.category, saved.practiceParams.type, saved.practiceParams.random);
       
       // 檢查練習參數是否相同
       const paramsMatch = 
+        savedParams.category === currentParams.category &&
         savedParams.type === currentParams.type &&
         savedParams.random === currentParams.random;
       
@@ -200,27 +224,45 @@ const LocationPractice: NextPage = () => {
       return;
     }
     
-    // Ensure client-side execution
-    if (typeof window !== 'undefined') {
-      if (!checkSavedProgress()) {
-        loadQuestions();
+    // Check for saved progress first
+    const saved = loadProgress();
+    if (saved && typeof window !== 'undefined') {
+      const category = router.query.category as string | undefined;
+      const type = router.query.type as string | undefined;
+      const random = router.query.random as string | undefined;
+      const currentParams = normalizeParams(category, type, random);
+      const savedParams = normalizeParams(saved.practiceParams.category, saved.practiceParams.type, saved.practiceParams.random);
+      
+      // 檢查練習參數是否相同
+      const paramsMatch = 
+        savedParams.category === currentParams.category &&
+        savedParams.type === currentParams.type &&
+        savedParams.random === currentParams.random;
+      
+      if (paramsMatch) {
+        setHasSavedProgress(true);
+        setShowProgressDialog(true);
+        setIsLoading(false);
+        return;
+      } else {
+        clearProgress(); // 參數不同，清除舊進度
       }
-    } else {
-      loadQuestions();
     }
-  }, [router.isReady, router.query, checkSavedProgress, loadQuestions]);
+    
+    loadQuestions();
+  }, [router.isReady, router.query.category, router.query.type, router.query.random]);
 
   // 暫存進度到 localStorage
   const saveProgress = (
     currentQ: number, 
     answers: UserAnswer[], 
     questions: Question[], 
-    params: { type?: string; random?: string }
+    params: { category?: string; type?: string; random?: string }
   ) => {
     if (typeof window === 'undefined') return;
     
     // 使用標準化參數
-    const normalizedParams = normalizeParams(params.type, params.random);
+    const normalizedParams = normalizeParams(params.category, params.type, params.random);
     
     const progressData: SavedProgress = {
       currentQuestion: currentQ,
@@ -237,6 +279,17 @@ const LocationPractice: NextPage = () => {
     }
   };
 
+  // 根據 category 獲取練習類型名稱
+  const getCategoryName = (category: string | undefined): string => {
+    switch (category) {
+      case 'location': return '地點';
+      case 'route': return '路線';
+      default: return '綜合';
+    }
+  };
+
+  const currentCategory = router.query.category as string | undefined;
+  const categoryName = getCategoryName(currentCategory);
   const currentQ = shuffledQuestions[currentQuestion];
   const isLastQuestion = currentQuestion === shuffledQuestions.length - 1;
 
@@ -261,8 +314,9 @@ const LocationPractice: NextPage = () => {
     setShowResult(true);
     
     // 自動暫存進度
-    const { type, random } = router.query;
+    const { category, type, random } = router.query;
     saveProgress(currentQuestion, newUserAnswers, shuffledQuestions, { 
+      category: category as string,
       type: type as string, 
       random: random as string 
     });
@@ -280,8 +334,9 @@ const LocationPractice: NextPage = () => {
       setShowAnswerHint(false);
       
       // 自動暫存進度
-      const { type, random } = router.query;
+      const { category, type, random } = router.query;
       saveProgress(nextQuestion, userAnswers, shuffledQuestions, { 
+        category: category as string,
         type: type as string, 
         random: random as string 
       });
@@ -312,8 +367,9 @@ const LocationPractice: NextPage = () => {
       setShowAnswerHint(false);
       
       // 自動暫存進度
-      const { type, random } = router.query;
+      const { category, type, random } = router.query;
       saveProgress(nextQuestion, newUserAnswers, shuffledQuestions, { 
+        category: category as string,
         type: type as string, 
         random: random as string 
       });
@@ -388,7 +444,7 @@ const LocationPractice: NextPage = () => {
             }}>
               <h2>📚 發現之前的練習進度</h2>
               <p style={{ margin: '1.5rem 0', fontSize: '1.1rem', color: '#666' }}>
-                您有一個未完成的地點練習，是否要繼續？
+                您有一個未完成的{categoryName}練習，是否要繼續？
               </p>
               <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
                 <button
@@ -436,7 +492,7 @@ const LocationPractice: NextPage = () => {
       <div>
         <Head>
           <title>載入中 - 香港的士筆試練習</title>
-          <meta name="description" content="正在載入地點練習題目" />
+          <meta name="description" content={`正在載入${categoryName}練習題目`} />
         </Head>
         
         <main style={styles.main}>
@@ -458,8 +514,8 @@ const LocationPractice: NextPage = () => {
     return (
       <div>
         <Head>
-          <title>地點練習結果 - 香港的士筆試練習</title>
-          <meta name="description" content="香港的士筆試地點練習結果" />
+          <title>{categoryName}練習結果 - 香港的士筆試練習</title>
+          <meta name="description" content={`香港的士筆試${categoryName}練習結果`} />
         </Head>
         
         <main style={styles.main}>
@@ -471,12 +527,14 @@ const LocationPractice: NextPage = () => {
             </div>
 
             <div style={styles.resultCard}>
-              <h1 style={styles.title}>🎉 地點練習完成！</h1>
+              <h1 style={styles.title}>🎉 {categoryName}練習完成！</h1>
               <div style={styles.scoreText}>
                 你的得分：{score}% ({grade})
               </div>
               <p style={{ color: score >= 70 ? '#4CAF50' : '#f44336', fontSize: '1.2rem' }}>
-                {score >= 70 ? '恭喜！你對香港地點有良好的認識' : '建議多熟悉香港各區域的地點'}
+                {score >= 70 ? 
+                  `恭喜！你對香港${categoryName === '地點' ? '地點' : '路線'}有良好的認識` : 
+                  `建議多熟悉香港${categoryName === '地點' ? '各區域的地點' : '的交通路線'}`}
               </p>
               
               <div style={styles.buttonGroup}>
@@ -507,8 +565,8 @@ const LocationPractice: NextPage = () => {
     return (
       <div>
         <Head>
-          <title>答案檢視 - 地點練習</title>
-          <meta name="description" content="檢視地點練習的詳細答案" />
+          <title>答案檢視 - {categoryName}練習</title>
+          <meta name="description" content={`檢視${categoryName}練習的詳細答案`} />
         </Head>
         
         <main style={styles.main}>
@@ -616,8 +674,8 @@ const LocationPractice: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>地點試題練習 - 香港的士筆試練習</title>
-        <meta name="description" content="練習香港各區地點、建築物和地標相關題目" />
+        <title>{categoryName}試題練習 - 香港的士筆試練習</title>
+        <meta name="description" content={`練習香港${categoryName === '地點' ? '各區地點、建築物和地標' : '交通路線和導航'}相關題目`} />
       </Head>
       
       <main style={styles.main}>
@@ -1023,4 +1081,4 @@ const styles = {
   } as const,
 };
 
-export default LocationPractice;
+export default PracticeQuestion;
