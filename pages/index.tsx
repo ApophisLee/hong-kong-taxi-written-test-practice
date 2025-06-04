@@ -12,6 +12,7 @@ const Home: NextPage = () => {
         <meta name="description" content="香港的士筆試練習應用 - Practice app for Hong Kong taxi written test" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <meta name="google-site-verification" content="A4RLgjTSOeNB3WKxKmA91qx0uFzxNqrV_WGyqSIEutU" />
       </Head>
 
       <main style={styles.main}>
