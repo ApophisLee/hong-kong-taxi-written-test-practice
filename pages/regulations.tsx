@@ -2,7 +2,8 @@ import { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import fs from 'fs';
 import path from 'path';
-import { remark } from 'remark';
+import { unified } from 'unified';
+import remarkParse from 'remark-parse';
 import remarkHtml from 'remark-html';
 
 interface RegulationsProps {
@@ -22,7 +23,10 @@ export const getStaticProps: GetStaticProps<RegulationsProps> = async () => {
   const filePath = path.join(process.cwd(), 'docs', '的士則例.md');
   const fileContent = fs.readFileSync(filePath, 'utf-8');
   // @ts-ignore
-  const processed = await remark().use(remarkHtml as any).process(fileContent);
+  const processed = await unified()
+    .use(remarkParse as any)
+    .use(remarkHtml as any)
+    .process(fileContent);
   return { props: { content: processed.toString() } };
 };
 
