@@ -113,11 +113,16 @@ npm run build
 ## 技術棧
 
 - **框架**: Next.js 15.3.3
-- **前端**: React 19.1.0  
+- **前端**: React 19.1.0
 - **語言**: TypeScript 5.0
 - **樣式**: CSS-in-JS + 全局 CSS
 - **部署**: GitHub Pages
 - **CI/CD**: GitHub Actions
+
+## 學習資源
+
+- [docs/的士則例.md](docs/的士則例.md) - 香港的士相關法例摘要，協助複習筆試重點
+- [在線閱讀的士則例](pages/regulations.tsx) - 在應用中瀏覽法例內容
 
 ## GitHub Pages 配置說明
 

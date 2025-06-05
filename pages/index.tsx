@@ -68,12 +68,14 @@ const Home: NextPage = () => {
             {/* <div style={styles.card}>
               <h2>模擬考試 &rarr;</h2>
               <p>進行完整的模擬考試</p>
-            </div>
-            
-            <div style={styles.card}>
-              <h2>學習資源 &rarr;</h2>
-              <p>查看相關學習資料</p>
             </div> */}
+
+            <Link href="/regulations" style={{ textDecoration: 'none' }}>
+              <div style={styles.card}>
+                <h2>學習資源 &rarr;</h2>
+                <p>查看相關學習資料</p>
+              </div>
+            </Link>
           </div>
           
           <div style={styles.sponsorContainer}>
