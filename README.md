@@ -1,6 +1,6 @@
 # 香港的士筆試練習 Hong Kong Taxi Written Test Practice
 
-> 本專案為 GitHub Copilot 協作開發實驗項目，主要內容由 LLM 生成，並經人工審核與優化。
+> 本專案為 GitHub Copilot 協作開發實驗項目（vibe coding），主要內容由 LLM 生成，並經人工審核與優化。
 
 [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-GitHub_Pages-blue?style=for-the-badge)](https://apophislee.github.io/hong-kong-taxi-written-test-practice/)
 
