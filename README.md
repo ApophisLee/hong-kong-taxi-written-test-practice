@@ -1,143 +1,127 @@
-# 香港的士筆試練習 Hong Kong Taxi Written Test Practice
+# 香港的士及網約車綜合筆試練習
 
-> 本專案為 GitHub Copilot 協作開發實驗項目（vibe coding？？），主要內容由 LLM 生成，並經人工審核與優化。
+Hong Kong Taxi and Ride-hailing Vehicle Combined Written Test Practice
 
 [![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-GitHub_Pages-blue?style=for-the-badge)](https://apophislee.github.io/hong-kong-taxi-written-test-practice/)
-
 ![Next.js](https://img.shields.io/badge/Next.js-15.3.3-black?logo=next.js)
 ![React](https://img.shields.io/badge/React-19.1.0-blue?logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?logo=typescript)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue?logo=typescript)
 ![License](https://img.shields.io/badge/License-GPL--3.0-green)
 
-一個專為香港的士筆試考生設計的在線練習平台，提供全面的題庫和模擬考試功能。使用 Next.js 建立，支援靜態部署到 GitHub Pages。
+這是一個非官方、免費及開源的繁體中文練習平台，內容按香港運輸署《的士及網約車綜合筆試指引》及自 **2026 年 8 月 3 日**起生效的《的士及網約車營運小冊子》整理。專案涵蓋載客服務知識、地方、路線及《道路使用者守則》四類題目，並可靜態部署至 GitHub Pages。
 
-A comprehensive online practice platform designed for Hong Kong taxi written test candidates, featuring complete question banks and mock exam functionality. Built with Next.js and supports static deployment to GitHub Pages.
+運輸署由 **2026 年 8 月 3 日**起接受綜合筆試申請，首批考生於 **2026 年 9 月中**開始應考；教材生效日不等同首日開考日期。
 
-## 支持專案 Support the Project
+> 本專案並非香港運輸署網站，亦不代表運輸署。練習題不等同正式試題；報考及應試前，請以運輸署最新公布及教材為準。
 
-如果這個專案對您有幫助，歡迎支持開發者！  
-If this project helps you, please consider supporting the developer!
+## 最新考試形式
 
-### GitHub Sponsors
-[![GitHub Sponsors](https://img.shields.io/badge/sponsor-GitHub%20Sponsors-ff69b4?logo=github)](https://github.com/sponsors/apophislee)
+綜合筆試限時 **45 分鐘**，考生須完成兩部分：
 
-您的支持能幫助我繼續維護和改進這個專案，讓更多準備考取香港的士牌照的朋友受益！  
-Your support helps me continue maintaining and improving this project for more people preparing for Hong Kong taxi license exams!
+| 部分 | 題型 | 正式考試題數 | 選項數目 | 及格要求 |
+| --- | --- | ---: | ---: | --- |
+| 甲部：的士及網約車營運 | 載客服務知識 | 20 | 4 | 甲部合計最少 25/30 |
+| 甲部：的士及網約車營運 | 地方 | 9 | 4 | 甲部合計最少 25/30 |
+| 甲部：的士及網約車營運 | 路線 | 1 | 3 | 甲部合計最少 25/30 |
+| 乙部：《道路使用者守則》 | 道路使用者守則 | 35 | 3 | 最少 30/35 |
 
-## 功能特色
+考生必須在甲、乙兩部均取得及格成績，才算通過綜合筆試。
 
-- 🚕 **交通規則練習** - 香港道路交通條例相關題目 （TODO）
-- 🗺️ **路線練習** - 香港主要道路、隧道和行車路線（TODO）
-- 📍 **地方練習** - 香港地理位置和地標認識
-- 📝 **綜合考試** - 模擬真實考試環境（TODO）
-- 📱 **響應式設計** - 支援手機、平板和桌面設備（TODO）
-- 🌐 **雙語支援** - 中英文界面（TODO）
-- 📊 **詳細分析** - 答題結果和錯題解析（TODO）
-- 🚀 **快速部署** - 自動部署到 GitHub Pages
+## 本專案題庫
 
-## 如何使用
+| 題庫 | 練習題數 | 選項數目 | 題庫性質 |
+| --- | ---: | ---: | --- |
+| 載客服務知識 | 30 | 4 | 按運輸署小冊子內容編寫的衍生練習題 |
+| 地方 | 255 | 4 | 對應官方地方表；題幹、干擾選項及解說由本專案整理 |
+| 路線 | 18 | 3 | 對應官方路線表；題幹、干擾選項及解說由本專案整理 |
+| 道路使用者守則 | 4 | 3 | 按運輸署網頁及指引所列官方模擬題作文字化整理 |
 
-### 線上版本（推薦）
-直接訪問 [線上版本](https://apophislee.github.io/hong-kong-taxi-written-test-practice/) 即可開始練習
+以上數字是本專案的題庫記錄數，並不是正式考試的題數，也不表示已涵蓋所有可能考核內容。載客服務知識、地方及路線練習題不應被理解為運輸署正式或曾使用的試題。
 
-### 本地使用
-1. 克隆項目到本地
-2. 安裝依賴並啟動開發伺服器
-3. 在瀏覽器中打開 `http://localhost:3000`
+## 功能
+
+- 四大題型獨立練習
+- 地方題可按醫院、旅遊景點、酒店、政府樓宇、商業大廈、購物商場、住宅樓宇及大專院校篩選
+- 題目及選項隨機排序
+- 即時顯示答案與解說
+- 儲存練習進度，方便稍後繼續
+- 響應式介面，支援手機、平板及桌面瀏覽器
+- 靜態輸出及 GitHub Pages 自動部署
+
+## 使用方法
+
+直接開啟[線上版本](https://apophislee.github.io/hong-kong-taxi-written-test-practice/)，選擇題型後開始練習。
 
 ## 本地開發
 
-### 安裝依賴
+需要 Node.js 及 npm。首次下載專案後，以 lockfile 安裝依賴：
 
 ```bash
-npm install
+npm ci
 ```
 
-### 啟動開發伺服器
+啟動開發伺服器：
 
 ```bash
 npm run dev
 ```
 
-開啟 [http://localhost:3000](http://localhost:3000) 在瀏覽器中查看結果。
+然後開啟 [http://localhost:3000](http://localhost:3000)。
 
-### 建置專案
+提交變更前，驗證題庫結構及正式建置：
 
 ```bash
+npm test
 npm run build
 ```
 
-建置完成後，靜態文件會生成在 `out/` 目錄中。
+題庫 manifest 的 SHA-256 用作變更審查提示，確保題目、選項、答案、解說或分類被修改時須同步覆核；它不會自行證明題庫與官方原文一致，內容仍須按下列官方來源人工核對。
 
-## 部署到 GitHub Pages
-
-### 自動部署（推薦）
-
-1. 將代碼推送到 GitHub 儲存庫的 `main` 分支
-2. 在 GitHub 儲存庫設定中啟用 GitHub Pages
-3. 選擇 "GitHub Actions" 作為來源
-4. GitHub Actions 會自動建置和部署您的應用程式
-
-### 手動部署
-
-1. 建置專案：
-   ```bash
-   npm run build
-   ```
-
-2. 將 `out/` 目錄的內容複製到您的網頁伺服器
+`npm run build` 會以 Next.js 靜態輸出設定建立 `out/`。
 
 ## 專案結構
 
+```text
+├── data/
+│   ├── location-questions.json   # 255 條地方題
+│   ├── operation-questions.json  # 30 條載客服務知識衍生題
+│   ├── question-bank-manifest.json # 考制版本、來源及題庫規格
+│   ├── road-user-questions.json  # 4 條官方道路使用者守則模擬題
+│   └── route-questions.json      # 18 條路線題
+├── docs/
+│   └── 的士則例.md               # 綜合筆試溫習摘要及資料來源
+├── pages/
+│   ├── _app.tsx                  # 應用程式入口
+│   ├── comprehensive-exam.tsx    # 題庫不足時的完整模擬試停用說明
+│   ├── index.tsx                 # 首頁
+│   ├── location-practice.tsx     # 統一題型練習頁面
+│   ├── practice.tsx              # 題型選擇頁面
+│   ├── regulations.tsx           # Markdown 溫習資料頁面
+│   └── traffic-practice.tsx      # 舊交通題路徑的更新說明
+├── scripts/
+│   └── validate-question-banks.mjs # 題數、分類、選項及 ID 驗證
+├── styles/                       # 全域樣式
+├── types/                        # TypeScript 共用類型
+├── next.config.js                # Next.js 靜態輸出設定
+└── package.json                  # 指令及依賴
 ```
-├── pages/                     # Next.js 頁面
-│   ├── _app.tsx              # 應用程式入口
-│   ├── index.tsx             # 首頁
-│   ├── practice.tsx          # 練習選擇頁面
-│   ├── traffic-practice.tsx  # 交通規則練習
-│   ├── location-practice.tsx  # 統一練習頁面（地點+路線）
-│   ├── location-practice.tsx # 地方練習
-│   └── comprehensive-exam.tsx # 綜合考試
-├── types/                    # TypeScript 類型定義
-│   └── index.ts             # 共用類型
-├── styles/                   # 樣式文件
-│   └── globals.css          # 全局樣式
-├── docs/                     # 題庫文檔
-│   ├── 路線題庫.txt         # 路線題庫參考
-│   └── 地方題庫.txt         # 地方題庫參考
-├── public/                   # 靜態資源
-├── .github/workflows/        # GitHub Actions 配置
-└── next.config.js           # Next.js 配置
-```
 
-## 技術棧
+## 官方資料來源
 
-- **框架**: Next.js 15.3.3
-- **前端**: React 19.1.0
-- **語言**: TypeScript 5.0
-- **樣式**: CSS-in-JS + 全局 CSS
-- **部署**: GitHub Pages
-- **CI/CD**: GitHub Actions
+- [運輸署：的士及網約車綜合筆試](https://www.td.gov.hk/tc/public_services/licences_and_permits/driving_test/tarhvcwt/index.html)
+- [《的士及網約車綜合筆試指引》](https://www.td.gov.hk/filemanager/tc/content_5405/Guide%20to%20Taxi%20and%20Ride-hailing%20Vehicle%20Combined%20Written%20Test_C.pdf)
+- [《的士及網約車營運小冊子》](https://www.td.gov.hk/filemanager/tc/content_5405/New%20Combined%20Written%20Test%20Booklet_C.pdf)
 
-## 學習資源
+本專案資料版本按上述來源整理，考制基準日為 2026 年 8 月 3 日。官方資料可能隨時修訂；如題庫與最新官方資料有差異，應以運輸署版本為準。
 
-- [docs/的士則例.md](docs/的士則例.md) - 香港的士相關法例摘要，協助複習筆試重點
-- [在線閱讀的士則例](pages/regulations.tsx) - 在應用中瀏覽法例內容
+## 部署
 
-## GitHub Pages 配置說明
+專案使用 `output: 'export'` 靜態輸出，並已設定 GitHub Pages 所需的 `basePath`、停用圖片最佳化及保留 `public/.nojekyll`。推送至 `main` 後，GitHub Actions 可自動建置及發布；也可以自行執行 `npm run build`，再部署 `out/` 內容。
 
-此專案已配置為可部署到 GitHub Pages：
+## 支持專案
 
-1. `next.config.js` 設定了靜態導出和正確的 basePath
-2. `.github/workflows/deploy.yml` 提供了自動部署工作流程
-3. `public/.nojekyll` 防止 Jekyll 處理
-
-## 開發注意事項
-
-- 使用 `output: 'export'` 配置進行靜態生成
-- 圖片最佳化已停用（`unoptimized: true`）以支援靜態託管
-- basePath 設定為儲存庫名稱以正確處理 GitHub Pages 路徑
+如果這個專案對你有幫助，歡迎透過 [GitHub Sponsors](https://github.com/sponsors/apophislee) 支持後續維護。
 
 ## 授權
 
-本專案使用 GPL-3.0 授權。
+原始碼依 [GNU General Public License v3.0](LICENSE) 發布。運輸署資料及教材的權利仍歸其各自權利人所有。

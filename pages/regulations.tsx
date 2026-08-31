@@ -13,7 +13,7 @@ interface RegulationsProps {
 const Regulations: NextPage<RegulationsProps> = ({ content }) => (
   <div style={styles.container}>
     <Head>
-      <title>的士則例簡介 - 香港的士筆試練習</title>
+      <title>綜合筆試溫習摘要 - 的士及網約車綜合筆試練習</title>
     </Head>
     <article dangerouslySetInnerHTML={{ __html: content }} />
   </div>
