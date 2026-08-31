@@ -1,10 +1,11 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
-import { NextPage } from 'next';
-import { CSSProperties } from 'react';
 import { PracticeOption } from '../types';
 import locationQuestions from '../data/location-questions.json';
+import routeQuestions from '../data/route-questions.json';
+import operationQuestions from '../data/operation-questions.json';
+import roadUserQuestions from '../data/road-user-questions.json';
 
 // Extract unique question types from location data
 const locationTypes: string[] = Array.from(
@@ -13,53 +14,51 @@ const locationTypes: string[] = Array.from(
 
 const practiceOptions: PracticeOption[] = [
   {
-    title: "地點試題練習",
-    description: "練習香港各區地點、建築物和地標相關題目",
+    title: "載客服務知識練習",
+    description: "溫習的士與網約車營運、安全、顧客服務及牌證要求（四選一）",
+    href: "/location-practice?category=operation",
+    icon: "🚕",
+    questions: operationQuestions.length,
+    format: "四選一"
+  },
+  {
+    title: "地方試題練習",
+    description: "練習官方小冊子所列的香港地方、建築物和地標（四選一）",
     href: "/location-practice?category=location",
     icon: "📍",
-    questions: 319,
-    difficulty: "困難"
+    questions: locationQuestions.length,
+    format: "四選一"
   },
   {
     title: "路線試題練習",
-    description: "練習香港道路、隧道和行車路線題目",
+    description: "練習官方小冊子所列的最直接可行路線（三選一）",
     href: "/location-practice?category=route",
     icon: "🛣️",
-    questions: 37,
-    difficulty: "中等"
+    questions: routeQuestions.length,
+    format: "三選一"
   },
-  // {
-  //   title: "交通規則練習",
-  //   description: "練習交通燈號、道路標誌和駕駛規則",
-  //   href: "/traffic-practice",
-  //   icon: "🚦",
-  //   questions: 8,
-  //   difficulty: "容易"
-  // },
-  // {
-  //   title: "綜合模擬考試",
-  //   description: "包含所有類型題目的完整模擬考試",
-  //   href: "/comprehensive-exam",
-  //   icon: "📝",
-  //   questions: 15,
-  //   difficulty: "綜合"
-  // }
+  {
+    title: "道路使用者守則練習",
+    description: "練習運輸署已公開的道路交通規例及安全駕駛示例題（三選一）",
+    href: "/location-practice?category=road-user",
+    icon: "🚦",
+    questions: roadUserQuestions.length,
+    format: "三選一"
+  }
 ];
 
 export default function Practice() {
   return (
     <div>
       <Head>
-        <title>選擇練習類型 - 香港的士筆試練習</title>
-        <meta name="description" content="選擇不同類型的香港的士筆試練習" />
+        <title>選擇練習類型 - 的士及網約車綜合筆試練習</title>
+        <meta name="description" content="選擇的士及網約車綜合筆試四類練習題" />
       </Head>
       
       <main style={styles.main}>
         <div style={styles.container}>
           <div style={styles.header}>
-            <Link href="/">
-              <button style={styles.backButton}>← 返回首頁</button>
-            </Link>
+            <Link href="/" style={styles.backButton}>← 返回首頁</Link>
           </div>
 
           <h1 style={styles.title}>選擇練習類型</h1>
@@ -67,7 +66,7 @@ export default function Practice() {
 
           <div style={styles.disclaimer}>
             <p style={styles.disclaimerText}>
-              📋 本題庫資料自 2025 年 2 月 3 日起適用，僅供參考。運輸署駕駛事務組得視實際需求調整題庫內容，請參閱運輸署網站最新內容，恕不另行通知。
+              📋 已按 2026 年 8 月 3 日起生效的運輸署教材更新。營運知識題為依教材編寫的練習題，道路使用者守則目前只收錄官方公開示例；本網站並非運輸署官方服務。
             </p>
           </div>
 
@@ -84,7 +83,7 @@ export default function Practice() {
                     <p style={styles.cardDescription}>{option.description}</p>
                     <div style={styles.cardMeta}>
                       <span style={styles.metaItem}>📊 {option.questions} 題</span>
-                      <span style={styles.metaItem}>⭐ {option.difficulty}</span>
+                      <span style={styles.metaItem}>🔢 {option.format}</span>
                     </div>
                   </div>
                 ) : (
@@ -97,9 +96,9 @@ export default function Practice() {
                     <p style={styles.cardDescription}>{option.description}</p>
                     <div style={styles.cardMeta}>
                       <span style={styles.metaItem}>📊 {option.questions} 題</span>
-                      <span style={styles.metaItem}>⭐ {option.difficulty}</span>
+                      <span style={styles.metaItem}>🔢 {option.format}</span>
                     </div>
-                    <div style={{display: 'flex', gap: '1rem'}}>
+                    <div style={{display: 'flex', flexWrap: 'wrap', gap: '1rem'}}>
                       <Link href={`${option.href}&random=false`} style={{ textDecoration: 'none' }}>
                         <div style={styles.startButton}>順序練習</div>
                       </Link>
@@ -113,9 +112,9 @@ export default function Practice() {
             ))}
           </div> {/* end of styles.grid */}
 
-          {/* 類型練習選擇區 */}
+          {/* 地方題類型練習選擇區 */}
           <div style={styles.typeSection}>
-            <h2 style={styles.typeTitle}>依類型練習</h2>
+            <h2 style={styles.typeTitle}>依地方類型練習</h2>
             <div style={styles.grid}>
               {locationTypes.map((type, i) => {
                 const count = locationQuestions.filter(q => q.type === type).length;
@@ -126,7 +125,7 @@ export default function Practice() {
                       <div style={styles.cardMeta}>
                         <span style={styles.metaItem}>📊 {count} 題</span>
                       </div>
-                      <div style={{display: 'flex', gap: '1rem'}}>
+                      <div style={{display: 'flex', flexWrap: 'wrap', gap: '1rem'}}>
                         <Link href={`/location-practice?category=location&type=${encodeURIComponent(type)}&random=false`} style={{ textDecoration: 'none' }}>
                           <div style={styles.startButton}>順序練習</div>
                         </Link>
@@ -146,19 +145,19 @@ export default function Practice() {
             <div style={styles.tipsList}>
               <div style={styles.tip}>
                 <span style={styles.tipNumber}>1</span>
-                <span style={styles.tipText}>建議先從地點練習開始，熟悉香港各區域</span>
+                <span style={styles.tipText}>甲部共 30 題：載客服務知識 20 題、地方 9 題、路線 1 題</span>
               </div>
               <div style={styles.tip}>
                 <span style={styles.tipNumber}>2</span>
-                <span style={styles.tipText}>路線練習較為困難，需要對香港道路有一定了解</span>
+                <span style={styles.tipText}>乙部共 35 題，考核道路交通規例及安全駕駛知識</span>
               </div>
               <div style={styles.tip}>
                 <span style={styles.tipNumber}>3</span>
-                <span style={styles.tipText}>每次練習後記得檢視錯誤答案的解釋</span>
+                <span style={styles.tipText}>載客服務及地方題為四選一；路線及道路使用者守則為三選一</span>
               </div>
               <div style={styles.tip}>
                 <span style={styles.tipNumber}>4</span>
-                <span style={styles.tipText}>建議達到 70% 或以上的正確率才進行考試</span>
+                <span style={styles.tipText}>正式考試須甲部達 25/30、乙部達 30/35，兩部均須及格</span>
               </div>
             </div>
           </div>
@@ -184,6 +183,7 @@ const styles = {
     marginBottom: '2rem',
   },
   backButton: {
+    display: 'inline-block',
     padding: '0.5rem 1rem',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     color: 'white',
@@ -191,6 +191,7 @@ const styles = {
     borderRadius: '5px',
     cursor: 'pointer',
     fontSize: '1rem',
+    textDecoration: 'none',
   },
   title: {
     textAlign: 'center' as const,
@@ -224,10 +225,6 @@ const styles = {
   },
   activeCard: {
     cursor: 'pointer',
-    '&:hover': {
-      transform: 'translateY(-5px)',
-      boxShadow: '0 12px 40px rgba(0, 0, 0, 0.15)',
-    }
   },
   comingSoonCard: {
     opacity: 0.7,

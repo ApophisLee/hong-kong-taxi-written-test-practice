@@ -1,22 +1,26 @@
 {
   "name": "hong-kong-taxi-written-test-practice",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "香港的士及網約車綜合筆試繁體中文練習平台",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "export": "next export",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "export": "next build",
+    "test": "node scripts/validate-question-banks.mjs"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ApophisLee/hong-kong-taxi-written-test-practice.git"
   },
-  "keywords": [],
+  "keywords": [
+    "hong-kong",
+    "taxi",
+    "ride-hailing",
+    "driving-test"
+  ],
   "author": "",
-  "license": "ISC",
+  "license": "GPL-3.0-only",
   "bugs": {
     "url": "https://github.com/ApophisLee/hong-kong-taxi-written-test-practice/issues"
   },

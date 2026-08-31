@@ -1,7 +1,9 @@
 // 題目類型定義
+export type QuestionCategory = 'operation' | 'location' | 'route' | 'road-user';
+
 export interface Question {
   id: number;
-  category: string;
+  category: QuestionCategory;
   question: string;
   options: string[];
   correct: number;
@@ -40,7 +42,7 @@ export interface PracticeOption {
   href: string;
   icon: string;
   questions: number;
-  difficulty: string;
+  format: string;
   comingSoon?: boolean;
 }
 

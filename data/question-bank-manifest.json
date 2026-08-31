@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "bankVersion": "combined-2026-08-03",
+  "effectiveDate": "2026-08-03",
+  "lastReviewedDate": "2026-08-31",
+  "exam": {
+    "durationMinutes": 45,
+    "partA": {
+      "operationQuestions": 20,
+      "locationQuestions": 9,
+      "routeQuestions": 1,
+      "passMark": 25,
+      "totalQuestions": 30
+    },
+    "partB": {
+      "roadUserQuestions": 35,
+      "passMark": 30,
+      "totalQuestions": 35
+    },
+    "bothPartsMustPass": true
+  },
+  "sources": {
+    "officialPage": "https://www.td.gov.hk/tc/public_services/licences_and_permits/driving_test/tarhvcwt/index.html",
+    "guide": "https://www.td.gov.hk/filemanager/tc/content_5405/Guide%20to%20Taxi%20and%20Ride-hailing%20Vehicle%20Combined%20Written%20Test_C.pdf",
+    "booklet": "https://www.td.gov.hk/filemanager/tc/content_5405/New%20Combined%20Written%20Test%20Booklet_C.pdf"
+  },
+  "banks": {
+    "operation": {
+      "records": 30,
+      "optionsPerQuestion": 4,
+      "contentSha256": "02cc58b8939a9e859cd23adf68455ea49f7bdab4ce5ce2a41b39c64c2d0f538d",
+      "origin": "project-derived-from-official-booklet",
+      "source": "booklet",
+      "reference": "printed pages 1-13"
+    },
+    "location": {
+      "records": 255,
+      "optionsPerQuestion": 4,
+      "contentSha256": "b39562eda9f9587c6da6ba12987dce540b2cd839ca820c3d14b8aa6c6bd7ae7b",
+      "origin": "project-derived-from-official-list",
+      "source": "booklet",
+      "reference": "printed pages 15-21"
+    },
+    "route": {
+      "records": 18,
+      "optionsPerQuestion": 3,
+      "contentSha256": "b5aa0c2950217aa6e71ae81c5cd2db78190bb0cb5f36c4883821e1050eb8999d",
+      "origin": "project-derived-from-official-list",
+      "source": "booklet",
+      "reference": "printed pages 22-23"
+    },
+    "road-user": {
+      "records": 4,
+      "optionsPerQuestion": 3,
+      "contentSha256": "940ec8e19da5c84fe4b2a9c264b6bfba1be0b80724b8d4622d51da1a8ed0a4dc",
+      "origin": "official-samples-adapted-for-text-interface",
+      "source": "guide",
+      "reference": "printed page 6"
+    }
+  },
+  "operationTopicReferences": {
+    "營運模式": "booklet printed page 1",
+    "車輛標識": "booklet printed pages 1-2",
+    "接載乘客": "booklet printed page 2",
+    "車費及支付": "booklet printed page 3",
+    "收據及司機身分": "booklet printed pages 3-4",
+    "記分及許可": "booklet printed pages 4-5",
+    "營運安全": "booklet printed pages 5-7",
+    "兒童安全": "booklet printed page 7",
+    "流動裝置": "booklet printed page 8",
+    "職業健康": "booklet printed pages 8-9",
+    "顧客服務": "booklet printed page 9",
+    "特殊需要": "booklet printed page 9",
+    "行李": "booklet printed page 9",
+    "動物": "booklet printed page 10"
+  }
+}

@@ -8,28 +8,28 @@ const Home: NextPage = () => {
   return (
     <div>
       <Head>
-        <title>香港的士筆試練習 - Hong Kong Taxi Written Test Practice</title>
-        <meta name="description" content="香港的士筆試練習應用 - Practice app for Hong Kong taxi written test" />
+        <title>香港的士及網約車綜合筆試練習</title>
+        <meta name="description" content="香港的士及網約車綜合筆試繁體中文練習平台" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="favicon.svg" type="image/svg+xml" />
         <meta name="google-site-verification" content="A4RLgjTSOeNB3WKxKmA91qx0uFzxNqrV_WGyqSIEutU" />
-        <meta name="keywords" content="的士筆試,的士模擬筆試,的士考試,的士筆試練習,的士車牌,的士考牌,網上預約駕駛考試,的士筆試模擬試題" />
+        <meta name="keywords" content="的士及網約車綜合筆試,網約車考試,的士筆試,的士模擬筆試,地方試題,路線試題,道路使用者守則" />
         <meta name="author" content="apophislee" />
         <link rel="canonical" href="https://apophislee.github.io/hong-kong-taxi-written-test-practice/" />
         {/* Open Graph */}
-        <meta property="og:title" content="香港的士筆試練習 - Hong Kong Taxi Written Test Practice" />
-        <meta property="og:description" content="免費香港的士筆試練習工具，支援多類型題庫，模擬考試，助你輕鬆通過筆試。" />
+        <meta property="og:title" content="香港的士及網約車綜合筆試練習" />
+        <meta property="og:description" content="按 2026 年新考制整理的免費繁體中文練習平台，涵蓋營運知識、地方、路線及道路使用者守則。" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://apophislee.github.io/hong-kong-taxi-written-test-practice/" />
-        <meta property="og:site_name" content="香港的士筆試練習" />
+        <meta property="og:site_name" content="香港的士及網約車綜合筆試練習" />
         <meta property="og:locale" content="zh_HK" />
         {/* JSON-LD 結構化資料 */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           '@context': 'https://schema.org',
           '@type': 'WebSite',
-          name: '香港的士筆試練習',
+          name: '香港的士及網約車綜合筆試練習',
           url: 'https://apophislee.github.io/hong-kong-taxi-written-test-practice/',
-          description: '免費香港的士筆試練習工具，支援多類型題庫，模擬考試，助你輕鬆通過筆試。',
+          description: '按 2026 年新考制整理的免費繁體中文練習平台，涵蓋營運知識、地方、路線及道路使用者守則。',
           inLanguage: 'zh-Hant',
           author: {
             '@type': 'Person',
@@ -45,15 +45,15 @@ const Home: NextPage = () => {
             🚕
           </h1>
           <p style={styles.description}>
-            歡迎來到香港的士筆試練習應用程式
+            香港的士及網約車綜合筆試練習
           </p>
           <p style={styles.subtitle}>
-            Welcome to Hong Kong Taxi Written Test Practice App
+            Taxi and Ride-hailing Vehicle Combined Written Test Practice
           </p>
           
           <div style={styles.disclaimer}>
             <p style={styles.disclaimerText}>
-              📋 本題庫資料自 2025 年 2 月 3 日起適用，僅供參考。運輸署駕駛事務組得視實際需求調整題庫內容，請參閱運輸署網站最新內容，恕不另行通知。
+              📋 已按 2026 年 8 月 3 日起生效的運輸署教材更新。練習題不等同正式試題，本網站亦非運輸署官方服務；報考前請核對運輸署最新資料。
             </p>
           </div>
           

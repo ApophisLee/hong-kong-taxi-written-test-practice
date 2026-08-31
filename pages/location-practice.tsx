@@ -6,9 +6,13 @@ import { NextPage } from 'next';
 import { Question, UserAnswer } from '../types';
 import locationQuestions from '../data/location-questions.json';
 import routeQuestions from '../data/route-questions.json';
+import operationQuestions from '../data/operation-questions.json';
+import roadUserQuestions from '../data/road-user-questions.json';
+import questionBankManifest from '../data/question-bank-manifest.json';
 
 // 進度暫存相關類型
 interface SavedProgress {
+  bankVersion: string;
   currentQuestion: number;
   userAnswers: UserAnswer[];
   shuffledQuestions: Question[];
@@ -21,7 +25,7 @@ interface SavedProgress {
 }
 
 // 暫存鍵名常數
-const STORAGE_KEY = 'practice-progress';
+const STORAGE_KEY = `practice-progress:${questionBankManifest.bankVersion}:v1`;
 
 // 載入題目資料
 const locationQuestionsData: Question[] = Array.isArray(locationQuestions) 
@@ -32,10 +36,23 @@ const routeQuestionsData: Question[] = Array.isArray(routeQuestions)
   ? routeQuestions as Question[]
   : [];
 
-// 合併所有題庫
-const allQuestionsData: Question[] = [...locationQuestionsData, ...routeQuestionsData];
+const operationQuestionsData: Question[] = Array.isArray(operationQuestions)
+  ? operationQuestions as Question[]
+  : [];
 
-// 基於香港的士筆試地方題庫的真實地點試題（319個地點）
+const roadUserQuestionsData: Question[] = Array.isArray(roadUserQuestions)
+  ? roadUserQuestions as Question[]
+  : [];
+
+// 合併所有題庫
+const allQuestionsData: Question[] = [
+  ...locationQuestionsData,
+  ...routeQuestionsData,
+  ...operationQuestionsData,
+  ...roadUserQuestionsData,
+];
+
+const VALID_CATEGORIES = new Set(['location', 'route', 'operation', 'road-user']);
 
 const shuffleArray = <T,>(array: T[]): T[] => {
   const arr = [...array];
@@ -83,9 +100,9 @@ const PracticeQuestion: NextPage = () => {
   const [showReview, setShowReview] = useState<boolean>(false);
   const [showAnswerHint, setShowAnswerHint] = useState<boolean>(false);
   const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
-  const [hasSavedProgress, setHasSavedProgress] = useState<boolean>(false);
   const [showProgressDialog, setShowProgressDialog] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const router = useRouter();
   
@@ -94,45 +111,60 @@ const PracticeQuestion: NextPage = () => {
     if (!router.isReady) return;
     
     try {
+      setLoadError(null);
       if (!allQuestionsData || !Array.isArray(allQuestionsData) || allQuestionsData.length === 0) {
         console.error('找不到題目資料');
+        setLoadError('題庫資料未能載入。');
         setIsLoading(false);
         return;
       }
       
       // Get current query parameters
-      const category = router.query.category as string | undefined;
+      const requestedCategory = router.query.category as string | undefined;
+      const category = requestedCategory || 'location';
       const type = router.query.type as string | undefined;
       const random = router.query.random as string | undefined;
+
+      if (!VALID_CATEGORIES.has(category)) {
+        setLoadError('找不到指定的練習類型。');
+        setShuffledQuestions([]);
+        setIsLoading(false);
+        return;
+      }
       
       let data = [...allQuestionsData]; // 創建副本避免修改原資料
       
       // 根據 category 篩選題目
-      if (category && category !== '') {
-        data = data.filter(q => q.category === category);
-      } else {
-        // 如果沒有指定 category，默認使用 location 類別
-        data = data.filter(q => q.category === 'location');
-      }
+      data = data.filter(q => q.category === category);
       
-      // 根據 type 篩選題目（僅對 location 類型有效）
-      if (type && type !== '' && category === 'location') {
+      // 根據題庫內的次分類標籤篩選題目
+      if (type && type !== '') {
         data = data.filter(q => q.type === type);
       }
       
       if (data.length === 0) {
         console.error('沒有找到符合條件的題目');
+        setLoadError('這個分類目前沒有可用題目。');
+        setShuffledQuestions([]);
         setIsLoading(false);
         return;
       }
       
       const useRandom = random === 'true';
       const prepared = useRandom ? prepareQuestions(data) : prepareOptionsOnly(data);
-      
+
+      setCurrentQuestion(0);
+      setSelectedAnswer(null);
+      setShowResult(false);
+      setUserAnswers([]);
+      setIsCompleted(false);
+      setShowReview(false);
+      setShowAnswerHint(false);
       setShuffledQuestions(prepared);
       setIsLoading(false);
     } catch (error) {
       console.error('載入題目失敗:', error);
+      setLoadError('載入題目時發生錯誤。');
       setIsLoading(false);
     }
   }, [router.isReady, router.query.category, router.query.type, router.query.random]);
@@ -146,6 +178,24 @@ const PracticeQuestion: NextPage = () => {
       if (!saved) return null;
       
       const progressData: SavedProgress = JSON.parse(saved);
+
+      if (progressData.bankVersion !== questionBankManifest.bankVersion) {
+        localStorage.removeItem(STORAGE_KEY);
+        return null;
+      }
+
+      if (
+        !Array.isArray(progressData.shuffledQuestions) ||
+        progressData.shuffledQuestions.length === 0 ||
+        !Array.isArray(progressData.userAnswers) ||
+        !Number.isInteger(progressData.currentQuestion) ||
+        progressData.currentQuestion < 0 ||
+        progressData.currentQuestion >= progressData.shuffledQuestions.length ||
+        !progressData.practiceParams
+      ) {
+        localStorage.removeItem(STORAGE_KEY);
+        return null;
+      }
       
       // 檢查是否超過 24 小時
       const dayInMs = 24 * 60 * 60 * 1000;
@@ -177,43 +227,20 @@ const PracticeQuestion: NextPage = () => {
     };
   }, []);
 
-  // 檢查並載入暫存進度
-  const checkSavedProgress = useCallback(() => {
-    if (typeof window === 'undefined') return false;
-    
-    const saved = loadProgress();
-    if (saved) {
-      const category = router.query.category as string | undefined;
-      const type = router.query.type as string | undefined;
-      const random = router.query.random as string | undefined;
-      const currentParams = normalizeParams(category, type, random);
-      const savedParams = normalizeParams(saved.practiceParams.category, saved.practiceParams.type, saved.practiceParams.random);
-      
-      // 檢查練習參數是否相同
-      const paramsMatch = 
-        savedParams.category === currentParams.category &&
-        savedParams.type === currentParams.type &&
-        savedParams.random === currentParams.random;
-      
-      if (paramsMatch) {
-        setHasSavedProgress(true);
-        setShowProgressDialog(true);
-        setIsLoading(false);
-        return true;
-      } else {
-        clearProgress(); // 參數不同，清除舊進度
-      }
-    }
-    return false;
-  }, [router.query, loadProgress, clearProgress, normalizeParams]);
-
   // 恢復暫存進度
   const restoreProgress = () => {
     const saved = loadProgress();
     if (saved) {
+      setLoadError(null);
       setCurrentQuestion(saved.currentQuestion);
       setUserAnswers(saved.userAnswers);
       setShuffledQuestions(saved.shuffledQuestions);
+      const savedQuestion = saved.shuffledQuestions[saved.currentQuestion];
+      const savedAnswer = saved.userAnswers.find(
+        answer => answer.questionId === savedQuestion?.id && answer.selected >= 0
+      );
+      setSelectedAnswer(savedAnswer?.selected ?? null);
+      setShowResult(Boolean(savedAnswer));
       setShowProgressDialog(false);
       setIsLoading(false);
     }
@@ -240,7 +267,7 @@ const PracticeQuestion: NextPage = () => {
         savedParams.random === currentParams.random;
       
       if (paramsMatch) {
-        setHasSavedProgress(true);
+        setLoadError(null);
         setShowProgressDialog(true);
         setIsLoading(false);
         return;
@@ -265,6 +292,7 @@ const PracticeQuestion: NextPage = () => {
     const normalizedParams = normalizeParams(params.category, params.type, params.random);
     
     const progressData: SavedProgress = {
+      bankVersion: questionBankManifest.bankVersion,
       currentQuestion: currentQ,
       userAnswers: answers,
       shuffledQuestions: questions,
@@ -282,9 +310,21 @@ const PracticeQuestion: NextPage = () => {
   // 根據 category 獲取練習類型名稱
   const getCategoryName = (category: string | undefined): string => {
     switch (category) {
-      case 'location': return '地點';
+      case 'location': return '地方';
       case 'route': return '路線';
-      default: return '綜合';
+      case 'operation': return '載客服務知識';
+      case 'road-user': return '道路使用者守則';
+      default: return '地方';
+    }
+  };
+
+  const getCategorySubject = (category: string | undefined): string => {
+    switch (category) {
+      case 'location': return '官方地方清單';
+      case 'route': return '官方路線清單';
+      case 'operation': return '的士及網約車營運知識';
+      case 'road-user': return '道路交通規例及安全駕駛知識';
+      default: return '題庫內容';
     }
   };
 
@@ -386,9 +426,9 @@ const PracticeQuestion: NextPage = () => {
   };
 
   const getScoreGrade = (score: number): string => {
-    if (score >= 80) return "優秀";
-    if (score >= 70) return "良好";
-    if (score >= 60) return "及格";
+    if (score >= 90) return "熟練";
+    if (score >= 80) return "良好";
+    if (score >= 70) return "尚可";
     return "需要加強";
   };
 
@@ -400,9 +440,9 @@ const PracticeQuestion: NextPage = () => {
     setIsCompleted(false);
     setShowReview(false);
     setShowAnswerHint(false);
-    setHasSavedProgress(false);
     setShowProgressDialog(false);
     setIsLoading(true);
+    setLoadError(null);
     clearProgress();
     loadQuestions();
   };
@@ -410,7 +450,8 @@ const PracticeQuestion: NextPage = () => {
   // 提前結束練習
   const handleQuickFinish = (): void => {
     // 將剩餘題目標記為跳過
-    const remainingQuestions = shuffledQuestions.slice(currentQuestion);
+    const firstUnansweredQuestion = showResult ? currentQuestion + 1 : currentQuestion;
+    const remainingQuestions = shuffledQuestions.slice(firstUnansweredQuestion);
     const skippedAnswers: UserAnswer[] = remainingQuestions.map(q => ({
       questionId: q.id,
       selected: -1,
@@ -428,7 +469,7 @@ const PracticeQuestion: NextPage = () => {
     return (
       <div>
         <Head>
-          <title>恢復練習進度 - 香港的士筆試練習</title>
+          <title>恢復練習進度 - 的士及網約車綜合筆試練習</title>
           <meta name="description" content="發現之前的練習進度" />
         </Head>
         
@@ -446,7 +487,7 @@ const PracticeQuestion: NextPage = () => {
               <p style={{ margin: '1.5rem 0', fontSize: '1.1rem', color: '#666' }}>
                 您有一個未完成的{categoryName}練習，是否要繼續？
               </p>
-              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <button
                   onClick={restoreProgress}
                   style={{
@@ -487,11 +528,11 @@ const PracticeQuestion: NextPage = () => {
     );
   }
 
-  if (isLoading || shuffledQuestions.length === 0) {
+  if (isLoading) {
     return (
       <div>
         <Head>
-          <title>載入中 - 香港的士筆試練習</title>
+          <title>載入中 - 的士及網約車綜合筆試練習</title>
           <meta name="description" content={`正在載入${categoryName}練習題目`} />
         </Head>
         
@@ -507,6 +548,26 @@ const PracticeQuestion: NextPage = () => {
     );
   }
 
+  if (loadError || shuffledQuestions.length === 0) {
+    return (
+      <div>
+        <Head>
+          <title>無法載入練習 - 的士及網約車綜合筆試練習</title>
+          <meta name="description" content="指定的練習題庫目前無法載入" />
+        </Head>
+        <main style={styles.main}>
+          <div style={styles.container}>
+            <div style={styles.errorCard}>
+              <h2 style={styles.errorTitle}>⚠️ 無法載入題目</h2>
+              <p style={styles.errorText}>{loadError || '這個分類目前沒有可用題目。'}</p>
+              <Link href="/practice" style={styles.errorLink}>返回練習選擇</Link>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   if (isCompleted && !showReview) {
     const score = calculateScore();
     const grade = getScoreGrade(score);
@@ -514,16 +575,14 @@ const PracticeQuestion: NextPage = () => {
     return (
       <div>
         <Head>
-          <title>{categoryName}練習結果 - 香港的士筆試練習</title>
-          <meta name="description" content={`香港的士筆試${categoryName}練習結果`} />
+          <title>{categoryName}練習結果 - 的士及網約車綜合筆試練習</title>
+          <meta name="description" content={`的士及網約車綜合筆試${categoryName}練習結果`} />
         </Head>
         
         <main style={styles.main}>
           <div style={styles.container}>
             <div style={styles.header}>
-              <Link href="/practice">
-                <button style={styles.backButton}>← 返回練習選擇</button>
-              </Link>
+              <Link href="/practice" style={styles.backButton}>← 返回練習選擇</Link>
             </div>
 
             <div style={styles.resultCard}>
@@ -531,10 +590,10 @@ const PracticeQuestion: NextPage = () => {
               <div style={styles.scoreText}>
                 你的得分：{score}% ({grade})
               </div>
-              <p style={{ color: score >= 70 ? '#4CAF50' : '#f44336', fontSize: '1.2rem' }}>
-                {score >= 70 ? 
-                  `恭喜！你對香港${categoryName === '地點' ? '地點' : '路線'}有良好的認識` : 
-                  `建議多熟悉香港${categoryName === '地點' ? '各區域的地點' : '的交通路線'}`}
+              <p style={{ color: score >= 80 ? '#4CAF50' : '#f44336', fontSize: '1.2rem' }}>
+                {score >= 80
+                  ? `你對${getCategorySubject(currentCategory)}已有良好掌握。`
+                  : `建議繼續溫習${getCategorySubject(currentCategory)}並重做錯題。`}
               </p>
               
               <div style={styles.buttonGroup}>
@@ -629,61 +688,17 @@ const PracticeQuestion: NextPage = () => {
     );
   }
 
-  // 進度恢復對話框
-  if (showProgressDialog) {
-    return (
-      <div>
-        <Head>
-          <title>恢復練習進度 - 香港的士筆試練習</title>
-          <meta name="description" content="發現之前的練習進度，選擇是否繼續" />
-        </Head>
-        
-        <main style={styles.main}>
-          <div style={styles.container}>
-            <div style={styles.progressDialog}>
-              <h2 style={styles.dialogTitle}>🔄 發現暫存進度</h2>
-              <p style={styles.dialogText}>
-                我們發現你之前有未完成的練習進度，是否要繼續之前的練習？
-              </p>
-              <div style={styles.dialogButtons}>
-                <button 
-                  style={styles.primaryButton}
-                  onClick={restoreProgress}
-                >
-                  繼續練習
-                </button>
-                <button 
-                  style={styles.secondaryButton}
-                  onClick={() => {
-                    clearProgress();
-                    setShowProgressDialog(false);
-                    setIsLoading(true);
-                    loadQuestions();
-                  }}
-                >
-                  重新開始
-                </button>
-              </div>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
   return (
     <div>
       <Head>
-        <title>{categoryName}試題練習 - 香港的士筆試練習</title>
-        <meta name="description" content={`練習香港${categoryName === '地點' ? '各區地點、建築物和地標' : '交通路線和導航'}相關題目`} />
+        <title>{categoryName}試題練習 - 的士及網約車綜合筆試練習</title>
+        <meta name="description" content={`練習的士及網約車綜合筆試的${categoryName}題目`} />
       </Head>
       
       <main style={styles.main}>
         <div style={styles.container}>
           <div style={styles.header}>
-            <Link href="/practice">
-              <button style={styles.backButton}>← 返回練習選擇</button>
-            </Link>
+            <Link href="/practice" style={styles.backButton}>← 返回練習選擇</Link>
             <div style={styles.progress}>
               第 {currentQuestion + 1} 題，共 {shuffledQuestions.length} 題
             </div>
@@ -734,7 +749,7 @@ const PracticeQuestion: NextPage = () => {
                     </div>
                   )}
                   
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', gap: '0.75rem', marginTop: '1rem' }}>
                     <button
                       style={styles.skipButton}
                       onClick={handleSkipQuestion}
@@ -857,13 +872,40 @@ const styles = {
     animation: 'spin 1s linear infinite',
     margin: '0 auto',
   } as const,
+  errorCard: {
+    maxWidth: '520px',
+    margin: '5rem auto 0',
+    padding: '2rem',
+    borderRadius: '15px',
+    background: 'rgba(255, 255, 255, 0.96)',
+    textAlign: 'center' as const,
+  },
+  errorTitle: {
+    color: '#9a3412',
+    marginTop: 0,
+  },
+  errorText: {
+    color: '#555',
+    lineHeight: 1.6,
+    marginBottom: '1.5rem',
+  },
+  errorLink: {
+    display: 'inline-block',
+    padding: '0.75rem 1.25rem',
+    borderRadius: '8px',
+    backgroundColor: '#003f7f',
+    color: 'white',
+  },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: '0.75rem',
     marginBottom: '2rem',
   } as const,
   backButton: {
+    display: 'inline-block',
     padding: '0.5rem 1rem',
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     color: 'white',
@@ -871,6 +913,7 @@ const styles = {
     borderRadius: '5px',
     cursor: 'pointer',
     fontSize: '1rem',
+    textDecoration: 'none',
   } as const,
   finishButton: {
     padding: '0.5rem 1rem',
@@ -984,7 +1027,7 @@ const styles = {
     border: 'none',
     borderRadius: '8px',
     cursor: 'pointer',
-    marginRight: '1rem',
+    marginRight: 0,
   } as const,
   showAnswerButton: {
     padding: '0.8rem 1.5rem',
@@ -994,7 +1037,7 @@ const styles = {
     border: 'none',
     borderRadius: '8px',
     cursor: 'pointer',
-    marginLeft: '1rem',
+    marginLeft: 0,
   } as const,
   hintContainer: {
     marginTop: '1rem',
@@ -1023,6 +1066,7 @@ const styles = {
   } as const,
   buttonGroup: {
     display: 'flex',
+    flexWrap: 'wrap',
     gap: '1rem',
     justifyContent: 'center',
     marginTop: '2rem',

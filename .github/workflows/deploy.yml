@@ -5,6 +5,9 @@
 name: Deploy Next.js site to Pages
 
 on:
+  # Validates pull requests without publishing them.
+  pull_request:
+    branches: ["main"]
   # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
@@ -12,11 +15,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Keep validation read-only; the deploy job receives publishing permissions below.
 permissions:
   contents: read
-  pages: write
-  id-token: write
+  pages: read
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
@@ -73,6 +75,8 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+      - name: Validate question banks
+        run: ${{ steps.detect-package-manager.outputs.manager }} test
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Upload artifact
@@ -82,6 +86,10 @@ jobs:
 
   # Deployment job
   deploy:
+    if: github.event_name != 'pull_request'
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
